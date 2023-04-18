@@ -1,12 +1,16 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const config = require('./config');
 const usersRouter = require('./routes/users');
 const cardsRouter = require('./routes/cards');
 
-// подключение базы данных
-mongoose.connect('mongodb://0.0.0.0:27017/mestodb');
 // назначение порта сервера
-const { PORT = 3000 } = process.env;
+const { PORT } = config;
+// назначение url базы данных
+const { MONGO_URL } = config;
+
+// подключение базы данных
+mongoose.connect(MONGO_URL);
 
 // подключение серверного модуля для интерпретации файла
 const app = express();
