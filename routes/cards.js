@@ -4,10 +4,10 @@ const {
 } = require('../controllers/cards');
 
 // обработка запроса получения всех карточек
-cardsRouter.get('/', getCards);
+cardsRouter.get('', getCards);
 
 // обработка запроса создания карточки
-cardsRouter.post('/', createCard);
+cardsRouter.post('', createCard);
 
 // обработка запроса удаления карточки по id
 cardsRouter.delete('/:cardId', deleteCard);

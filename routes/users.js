@@ -4,7 +4,7 @@ const {
 } = require('../controllers/users');
 
 // обработка запроса получения пользователей
-usersRouter.get('/', getUsers);
+usersRouter.get('', getUsers);
 
 // обработка запроса получения данных пользователя по id
 usersRouter.get('/:userId', getUser);
@@ -13,7 +13,7 @@ usersRouter.get('/:userId', getUser);
 // usersRouter.get('/me', getOwner);
 
 // обработка запроса создания пользователя
-usersRouter.post('/', createUser);
+usersRouter.post('', createUser);
 
 // обработка запроса изменения данных текущего пользователя
 usersRouter.patch('/me', updateUser);
