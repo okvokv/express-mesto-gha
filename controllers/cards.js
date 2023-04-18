@@ -7,7 +7,7 @@ const getCards = (req, res) => {
     .then((cards) => res.send(cards))
     .catch((err) => {
       const { ERROR_CODE, ERROR_MESSAGE } = determineError(err);
-      res.status(ERROR_CODE).send(ERROR_MESSAGE);
+      res.status(ERROR_CODE).send({ message: ERROR_MESSAGE });
     });
 };
 // --------------------------------------------------------------------------------
@@ -19,7 +19,7 @@ const createCard = (req, res) => {
     .then((cardData) => res.status(201).send(cardData))
     .catch((err) => {
       const { ERROR_CODE, ERROR_MESSAGE } = determineError(err);
-      res.status(ERROR_CODE).send(ERROR_MESSAGE);
+      res.status(ERROR_CODE).send({ message: ERROR_MESSAGE });
     });
 };
 // ----------------------------------------------------------------------------------
@@ -29,7 +29,7 @@ const deleteCard = (req, res) => {
     .then(() => res.send({ message: 'Пост удален' }))
     .catch((err) => {
       const { ERROR_CODE, ERROR_MESSAGE } = determineError(err);
-      res.status(ERROR_CODE).send(ERROR_MESSAGE);
+      res.status(ERROR_CODE).send({ message: ERROR_MESSAGE });
     });
 };
 
@@ -45,7 +45,7 @@ const putLike = (req, res) => {
     .then((cardData) => res.send(cardData))
     .catch((err) => {
       const { ERROR_CODE, ERROR_MESSAGE } = determineError(err);
-      res.status(ERROR_CODE).send(ERROR_MESSAGE);
+      res.status(ERROR_CODE).send({ message: ERROR_MESSAGE });
     });
 };
 
@@ -57,11 +57,11 @@ const deleteLike = (req, res) => {
     { $pull: { likes: ownerId } }, // убрать like текущего пользователя из массива
     { new: true },
   )
-  // (cardData) => если cardData = null ''
+    // (cardData) => если cardData = null ''
     .then((cardData) => res.send(cardData))
     .catch((err) => {
       const { ERROR_CODE, ERROR_MESSAGE } = determineError(err);
-      res.status(ERROR_CODE).send(ERROR_MESSAGE);
+      res.status(ERROR_CODE).send({ message: ERROR_MESSAGE });
     });
 };
 

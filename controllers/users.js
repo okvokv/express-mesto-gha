@@ -7,7 +7,7 @@ const getUsers = (req, res) => {
     .then((users) => res.send(users))
     .catch((err) => {
       const { ERROR_CODE, ERROR_MESSAGE } = determineError(err);
-      res.status(ERROR_CODE).send(ERROR_MESSAGE);
+      res.status(ERROR_CODE).send({ message: ERROR_MESSAGE });
     });
 };
 
@@ -17,7 +17,7 @@ const getUser = (req, res) => {
     .then((userData) => res.send(userData))
     .catch((err) => {
       const { ERROR_CODE, ERROR_MESSAGE } = determineError(err);
-      res.status(ERROR_CODE).send(ERROR_MESSAGE);
+      res.status(ERROR_CODE).send({ message: ERROR_MESSAGE });
     });
 };
 // получить данные текущего пользователя
@@ -26,7 +26,7 @@ const getUser = (req, res) => {
 //    .then((userData) => res.send(userData))
 //    .catch((err) => {
 //      const { ERROR_CODE, ERROR_MESSAGE } = determineError(err);
-//      res.status(ERROR_CODE).send(ERROR_MESSAGE);
+//      res.status(ERROR_CODE).send({ message: ERROR_MESSAGE });
 //    });
 // };
 // ---------------------------------------------------------------------------
@@ -37,7 +37,7 @@ const createUser = (req, res) => {
     .then((userData) => res.status(201).send(userData))
     .catch((err) => {
       const { ERROR_CODE, ERROR_MESSAGE } = determineError(err);
-      res.status(ERROR_CODE).send(ERROR_MESSAGE);
+      res.status(ERROR_CODE).send({ message: ERROR_MESSAGE });
     });
 };
 //------------------------------------------------------------------------------
@@ -52,7 +52,7 @@ const updateUser = (req, res) => {
     .then((userData) => res.send(userData))
     .catch((err) => {
       const { ERROR_CODE, ERROR_MESSAGE } = determineError(err);
-      res.status(ERROR_CODE).send(ERROR_MESSAGE);
+      res.status(ERROR_CODE).send({ message: ERROR_MESSAGE });
     });
 };
 
@@ -66,7 +66,7 @@ const updateAvatar = (req, res) => {
     .then((userData) => res.send(userData))
     .catch((err) => {
       const { ERROR_CODE, ERROR_MESSAGE } = determineError(err);
-      res.status(ERROR_CODE).send(ERROR_MESSAGE);
+      res.status(ERROR_CODE).send({ message: ERROR_MESSAGE });
     });
 };
 // --------------------------------------------------------------------------
