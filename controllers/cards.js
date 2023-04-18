@@ -42,7 +42,8 @@ const putLike = (req, res) => {
     // в массив, если такого там нет
     { new: true },
   )
-    .then((cardData) => res.send(cardData))
+    .then((cardData) => (cardData ? res.send(cardData)
+      : res.status(404).send({ message: 'Карточка не найдена' })))
     .catch((err) => {
       const { ERROR_CODE, ERROR_MESSAGE } = determineError(err);
       res.status(ERROR_CODE).send({ message: ERROR_MESSAGE });
@@ -57,8 +58,8 @@ const deleteLike = (req, res) => {
     { $pull: { likes: ownerId } }, // убрать like текущего пользователя из массива
     { new: true },
   )
-    // (cardData) => если cardData = null ''
-    .then((cardData) => res.send(cardData))
+    .then((cardData) => (cardData ? res.send(cardData)
+      : res.status(404).send({ message: 'Карточка не найдена' })))
     .catch((err) => {
       const { ERROR_CODE, ERROR_MESSAGE } = determineError(err);
       res.status(ERROR_CODE).send({ message: ERROR_MESSAGE });

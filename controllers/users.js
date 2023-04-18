@@ -14,7 +14,8 @@ const getUsers = (req, res) => {
 // получить данные любого пользователя по id
 const getUser = (req, res) => {
   user.findById(req.params.userId)
-    .then((userData) => res.send(userData))
+    .then((userData) => (userData ? res.send(userData)
+      : res.status(404).send({ message: 'Пользователь не найден' })))
     .catch((err) => {
       const { ERROR_CODE, ERROR_MESSAGE } = determineError(err);
       res.status(ERROR_CODE).send({ message: ERROR_MESSAGE });
@@ -49,7 +50,8 @@ const updateUser = (req, res) => {
     { name, about },
     { new: true },
   )
-    .then((userData) => res.send(userData))
+    .then((userData) => (userData ? res.send(userData)
+      : res.status(404).send({ message: 'Пользователь не найден' })))
     .catch((err) => {
       const { ERROR_CODE, ERROR_MESSAGE } = determineError(err);
       res.status(ERROR_CODE).send({ message: ERROR_MESSAGE });
