@@ -25,12 +25,18 @@ const createCard = (req, res) => {
 // ----------------------------------------------------------------------------------
 // удалить карточку
 const deleteCard = (req, res) => {
-  card.deleteMany({ _id: req.params.cardId })
-    .then((cardData) => (cardData ? res.send({ message: 'Пост удален' })
-      : res.status(404).send({ message: 'Карточка не найдена' })))
-    .catch((err) => {
-      const { ERROR_CODE, ERROR_MESSAGE } = determineError(err);
-      res.status(ERROR_CODE).send({ message: ERROR_MESSAGE });
+  card.findById(req.params.cardId)
+    .then((cardData) => {
+      if (cardData) {
+        card.findByIdAndRemove(req.params.cardId)
+          .then(() => res.send({ message: 'Пост удален' }))
+          .catch((err) => {
+            const { ERROR_CODE, ERROR_MESSAGE } = determineError(err);
+            res.status(ERROR_CODE).send({ message: ERROR_MESSAGE });
+          });
+        return;
+      }
+      res.status(404).send({ message: 'Карточка не найдена' });
     });
 };
 

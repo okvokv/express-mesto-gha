@@ -16,7 +16,6 @@ app.use(express.json());
 
 // мидлваре добавления к каждому запросу объекта req.user со значением _id пользователя
 app.use((req, res, next) => {
-  console.log(req.params, req.body);
   req.user = { _id: '643d9e02682fc5675c4ffb67' }; // _id тестового пользователя
   next();
 });
