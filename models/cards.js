@@ -17,8 +17,8 @@ const cardSchema = new mongoose.Schema(
       // type: mongoose.SchemaTypes.Url,
       required: true,
       validate: {
-        validator(v) {
-          return /^(https?:\/\/)(www\.)?[a-z0-9\-.]{2,}\.[a-z]{2,}(\/.*)?$/.test(v);
+        validator(link) {
+          return /^(https?:\/\/)(www\.)?[a-z0-9\-.]{2,}\.[a-z]{2,}(\/.*)?$/.test(link);
         },
         message: 'Ошибка валидации ссылки',
       },
