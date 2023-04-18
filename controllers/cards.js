@@ -25,6 +25,7 @@ const createCard = (req, res) => {
 // ----------------------------------------------------------------------------------
 // удалить карточку
 const deleteCard = (req, res) => {
+  // проверка наличия карточки
   card.findById(req.params.cardId)
     .then((cardData) => {
       if (cardData) {
