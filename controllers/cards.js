@@ -37,7 +37,7 @@ const deleteCard = (req, res) => {
           });
         return;
       }
-      res.status(404).send({ message: 'Карточка не найдена' });
+      res.status(404).send({ message: 'Запрашиваемая карточка не найдена' });
     })
     .catch((err) => {
       const { ERROR_CODE, ERROR_MESSAGE } = determineError(err);
@@ -55,7 +55,7 @@ const putLike = (req, res) => {
     { new: true },
   )
     .then((cardData) => (cardData ? res.send(cardData)
-      : res.status(404).send({ message: 'Карточка не найдена' })))
+      : res.status(404).send({ message: 'Запрашиваемая карточка не найдена' })))
     .catch((err) => {
       const { ERROR_CODE, ERROR_MESSAGE } = determineError(err);
       res.status(ERROR_CODE).send({ message: ERROR_MESSAGE });
@@ -71,7 +71,7 @@ const deleteLike = (req, res) => {
     { new: true },
   )
     .then((cardData) => (cardData ? res.send(cardData)
-      : res.status(404).send({ message: 'Карточка не найдена' })))
+      : res.status(404).send({ message: 'Запрашиваемая карточка не найдена' })))
     .catch((err) => {
       const { ERROR_CODE, ERROR_MESSAGE } = determineError(err);
       res.status(ERROR_CODE).send({ message: ERROR_MESSAGE });

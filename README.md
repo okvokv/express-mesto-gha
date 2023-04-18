@@ -8,4 +8,4 @@
 
 * В проекте использованы сервер на базе модуля Express Node.js, база данных MongoDB, язык программирования JavaScript.
 
-https://okvokv.github.io/express-mesto-gha
+ссылка на репозиторий: https://github.com/okvokv/express-mesto-gha

@@ -15,7 +15,7 @@ const getUsers = (req, res) => {
 const getUser = (req, res) => {
   user.findById(req.params.userId)
     .then((userData) => (userData ? res.send(userData)
-      : res.status(404).send({ message: 'Пользователь не найден' })))
+      : res.status(404).send({ message: 'Запрашиваемый пользователь не найден' })))
     .catch((err) => {
       const { ERROR_CODE, ERROR_MESSAGE } = determineError(err);
       res.status(ERROR_CODE).send({ message: ERROR_MESSAGE });
@@ -51,7 +51,7 @@ const updateUser = (req, res) => {
     { new: true, runValidators: true },
   )
     .then((userData) => (userData ? res.send(userData)
-      : res.status(404).send({ message: 'Пользователь не найден' })))
+      : res.status(404).send({ message: 'Запрашиваемый пользователь не найден' })))
     .catch((err) => {
       const { ERROR_CODE, ERROR_MESSAGE } = determineError(err);
       res.status(ERROR_CODE).send({ message: ERROR_MESSAGE });

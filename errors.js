@@ -15,24 +15,24 @@ function determineError(err) {
   }
   if (err.name === 'CastError') {
     const ERROR_CODE = 400;
-    const ERROR_MESSAGE = 'Некорректный id';
+    const ERROR_MESSAGE = 'Передан некорректный id';
     console.log(ERROR_CODE);
     return { ERROR_CODE, ERROR_MESSAGE };
   }
   if ((err.name === 'MongooseError') && (err.message.includes('users'))) {
     const ERROR_CODE = 404;
-    const ERROR_MESSAGE = 'Пользователь/ли не найден/ны';
+    const ERROR_MESSAGE = 'Запрашиваемый/е пользователь/ли не найден/ны';
     console.log(ERROR_CODE);
     return { ERROR_CODE, ERROR_MESSAGE };
   }
   if ((err.name === 'MongooseError') && (err.message.includes('cards'))) {
     const ERROR_CODE = 404;
-    const ERROR_MESSAGE = 'Карточка/ки не найдена/ны';
+    const ERROR_MESSAGE = 'Запрашиваемая/е карточка/ки не найдена/ны';
     console.log(ERROR_CODE);
     return { ERROR_CODE, ERROR_MESSAGE };
   }
   const ERROR_CODE = 500;
-  const ERROR_MESSAGE = 'Ошибка  на сервере';
+  const ERROR_MESSAGE = 'На сервере произошла ошибка';
   console.log(ERROR_CODE);
   return { ERROR_CODE, ERROR_MESSAGE };
 }
