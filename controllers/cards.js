@@ -26,7 +26,8 @@ const createCard = (req, res) => {
 // удалить карточку
 const deleteCard = (req, res) => {
   card.deleteMany({ _id: req.params.cardId })
-    .then(() => res.send({ message: 'Пост удален' }))
+    .then((cardData) => (cardData ? res.send({ message: 'Пост удален' })
+      : res.status(404).send({ message: 'Карточка не найдена' })))
     .catch((err) => {
       const { ERROR_CODE, ERROR_MESSAGE } = determineError(err);
       res.status(ERROR_CODE).send({ message: ERROR_MESSAGE });
