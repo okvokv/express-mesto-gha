@@ -24,7 +24,7 @@ app.use((req, res, next) => {
 // подключение роутеров
 app.use('/users', usersRouter);
 app.use('/cards', cardsRouter);
-app.use('*', ((req, res) => res.status(404).send('Запрошен несуществующий маршрут')));
+app.use('*', ((req, res) => res.status(404).send({ message: 'Запрошен несуществующий маршрут' })));
 
 // включение прослушивания  порта
 app.listen(PORT, () => {

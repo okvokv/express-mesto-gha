@@ -15,7 +15,7 @@ function determineError(err) {
   }
   if (err.name === 'CastError') {
     const ERROR_CODE = 400;
-    const ERROR_MESSAGE = 'Неправильный id';
+    const ERROR_MESSAGE = 'Некорректный id';
     console.log(ERROR_CODE);
     return { ERROR_CODE, ERROR_MESSAGE };
   }
