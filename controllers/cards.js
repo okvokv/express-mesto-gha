@@ -38,6 +38,10 @@ const deleteCard = (req, res) => {
         return;
       }
       res.status(404).send({ message: 'Карточка не найдена' });
+    })
+    .catch((err) => {
+      const { ERROR_CODE, ERROR_MESSAGE } = determineError(err);
+      res.status(ERROR_CODE).send({ message: ERROR_MESSAGE });
     });
 };
 
