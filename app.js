@@ -6,11 +6,9 @@ const cardsRouter = require('./routes/cards');
 
 // назначение порта сервера
 const { PORT } = config;
-// назначение url базы данных
-const { MONGO_URL } = config;
 
 // подключение базы данных
-mongoose.connect(MONGO_URL);
+mongoose.connect('mongodb://0.0.0.0:27017/mestodb');
 
 // подключение серверного модуля для интерпретации файла
 const app = express();
