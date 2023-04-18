@@ -58,10 +58,9 @@ const updateUser = (req, res) => {
 
 // изменить аватар текущего пользователя
 const updateAvatar = (req, res) => {
-  const { avatar } = req.body;
   user.findByIdAndUpdate(
     req.user._id,
-    avatar,
+    { avatar: req.body.avatar },
     { new: true },
   )
     .then((userData) => res.send(userData))

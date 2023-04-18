@@ -4,7 +4,7 @@ const usersRouter = require('./routes/users');
 const cardsRouter = require('./routes/cards');
 
 // подключение базы данных
-mongoose.connect('mongodb://localhost:27017/mestodb');
+mongoose.connect('mongodb://0.0.0.0:27017/mestodb');
 // назначение порта сервера
 const { PORT = 3000 } = process.env;
 

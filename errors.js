@@ -9,7 +9,13 @@ function determineError(err) {
   }
   if ((err.name === 'MongooseError') && (err.message.includes('timed out'))) {
     const ERROR_CODE = 400;
-    const ERROR_MESSAGE = 'База данных не подключена';
+    const ERROR_MESSAGE = 'Ошибка базы данных.';
+    console.log(ERROR_CODE);
+    return { ERROR_CODE, ERROR_MESSAGE };
+  }
+  if (err.name === 'CastError') {
+    const ERROR_CODE = 400;
+    const ERROR_MESSAGE = 'Неправильный id';
     console.log(ERROR_CODE);
     return { ERROR_CODE, ERROR_MESSAGE };
   }

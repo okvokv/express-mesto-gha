@@ -25,7 +25,7 @@ const createCard = (req, res) => {
 // ----------------------------------------------------------------------------------
 // удалить карточку
 const deleteCard = (req, res) => {
-  card.deleteMany(req.params.cardId)
+  card.deleteMany({ _id: req.params.cardId })
     .then(() => res.send({ message: 'Пост удален' }))
     .catch((err) => {
       const { ERROR_CODE, ERROR_MESSAGE } = determineError(err);
@@ -57,6 +57,7 @@ const deleteLike = (req, res) => {
     { $pull: { likes: ownerId } }, // убрать like текущего пользователя из массива
     { new: true },
   )
+  // (cardData) => если cardData = null ''
     .then((cardData) => res.send(cardData))
     .catch((err) => {
       const { ERROR_CODE, ERROR_MESSAGE } = determineError(err);

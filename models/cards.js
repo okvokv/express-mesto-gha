@@ -10,6 +10,7 @@ const cardSchema = new mongoose.Schema(
       validate: {
         validator(name) { return name.length >= 2 && name.length <= 30; },
       },
+      message: 'Ошибка валидации name',
     },
     link: {
       type: String,
