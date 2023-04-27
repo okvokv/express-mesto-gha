@@ -14,10 +14,9 @@ const userSchema = new mongoose.Schema(
       message: 'Ошибка валидации email',
     },
     password: {
+      select: false,
       type: String,
       required: true,
-      select: false, // чтобы api не возвращал хеш пароля
-      // валидация ?
     },
     name: {
       type: String,
