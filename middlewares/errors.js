@@ -31,8 +31,13 @@ class serverError extends Error {
       console.log(statusCode);
       return { statusCode, message };
     }
-    // 401 неправильная почта или пароль
-
+    if (this.err.name === 'JWT') {                          //---//
+      // ошибка авторизации преданы неверная почта или пароль
+      const statusCode = 401;
+      const message = 'Неправильные почта или пароль';
+      console.log(statusCode);
+      return { statusCode, message };
+    }
     if (this.err.name === ' ') {                            //---//
       const statusCode = 403;
       const message = 'Вы не являетесь владельцем данной карточки';
@@ -66,8 +71,8 @@ class serverError extends Error {
 
 module.exports = serverError;
 
-// 401 — передан неверный логин или пароль.
-// Также эту ошибку возвращает авторизационный middleware,
+// 401 — передан неверный логин или пароль,
+// также эту ошибку возвращает аутентификационный middleware,
 // если передан неверный JWT;
 // 403 — попытка удалить чужую карточку;
 // 409 — при регистрации указан email, который уже существует на сервере.

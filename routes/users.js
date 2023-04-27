@@ -13,7 +13,7 @@ usersRouter.get('/:userId', getUser);
 // обработка запроса получения данных текущего пользователя
 usersRouter.get('/me', celebrate({
   cookies: Joi.object().keys({
-    // Authorization: `Bearer ${_token}` // ----------------------------- //
+    // Authorization: `Bearer ${_token}` // ---а любого другого можно без авторизации ? //
   }),
 }), getCurrentUser);
 
@@ -28,7 +28,7 @@ usersRouter.patch('/me', celebrate({
 // обработка запроса  изменения аватара текущего пользователя
 usersRouter.patch('/me/avatar', celebrate({
   body: Joi.object().keys({
-    avatar: Joi.string().required().regex(/^(https?:\/\/)(www\.)?[a-z0-9\-.]{2,}\.[a-z]{2,}(\/.*)?$/),
+    avatar: Joi.string().required().regex(/^(https?:\/\/)(www\.)?[a-z0-9\-.]{2,}\.[a-z]{2,}(\/.*#)?$/),
   }),
 }), updateAvatar);
 

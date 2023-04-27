@@ -24,7 +24,7 @@ const deleteCard = (req, res, next) => {
       if (cardData) {
         // карточку может удалить только владелец
         card.findByIdAndRemove(req.params.cardId, { ownerId: req.user_id })
-          //   проверить вид ошибки при попытке удаления не владельцем,
+          //   проверить вид ошибки при попытке удаления не владельцем 403,
           //   может ввести валидацию, тогда она эту ошибку будет выдавать ? //
           .then(() => res.send({ message: 'Пост удален' }))
           .catch(next);
@@ -53,7 +53,7 @@ const deleteLike = (req, res, next) => {
   card.findByIdAndUpdate(
     req.params.cardId,
     { $pull: { likes: req.user._id } }, // текущий пользователь может удалить лайк
-    // если он в массиве есть
+    // если в массиве он уже есть
     { new: true },
   )
     .then((cardData) => (cardData ? res.send(cardData)

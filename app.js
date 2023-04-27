@@ -32,10 +32,10 @@ app.post('/signin', celebrate({
 app.post('/signup', celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
-    password: Joi.string().required().regex(/^(?=.*?[A-Za-z])(?=.*?[^\w\s]).{8,30}$/),
+    password: Joi.string().required().regex(/^([A-Za-z]){8,30}$/),
     name: Joi.string().min(2).max(30),
     about: Joi.string().min(2).max(30),
-    avatar: Joi.string().regex(/^(https?:\/\/)(www\.)?[a-z0-9\-.]{2,}\.[a-z]{2,}(\/.*)?$/),
+    avatar: Joi.string().regex(/^(https?:\/\/)(www\.)?[a-z0-9\-.]{2,}\.[a-z]{2,}(\/.*#)?$/),
   }),
 }), createUser);
 

@@ -27,7 +27,7 @@ const getCurrentUser = (req, res, next) => {
 const login = (req, res, next) => {
   const { email, password } = req.body;
   user.findByCredentials({ email, password })
-    .then((userData) => { //                разве здесь нет захешированного пароля ?
+    .then((userData) => { // здесь есть захешированный пароль
       // создание жетона с зашифрованным _id пользователя на 7 дней
       const token = jwt.sign({ _id: userData._id }, 'super-strong-secret', { expiresIn: '7d' });
       res.cookie('jwt', token, {
@@ -50,7 +50,7 @@ const createUser = (req, res, next) => {
     .then((hpassword) => user.create({
       email, password: hpassword, name, about, avatar,
     }))
-    .then((userData) => res.status(201).send({ email: userData.email, _id: userData.id }))
+    .then((userData) => res.status(201).send({ _id: userData.id, email: userData.email }))
     .catch(next);
 };
 //------------------------------------------------------------------------------
@@ -60,7 +60,7 @@ const updateUser = (req, res, next) => {
   user.findOneAndUpdate(
     { _id: req.user._id }, // изменить данные может только владелец
     { name, about },
-    { new: true, runValidators: true },
+    { new: true },
   )
     .then((userData) => (userData ? res.send(userData)
       : res.status(404).send({ message: 'Запрашиваемый пользователь не найден' })))
@@ -72,9 +72,10 @@ const updateAvatar = (req, res, next) => {
   user.findOneAndUpdate(
     { _id: req.user._id }, // изменить аватар может только владелец
     { avatar: req.body.avatar },
-    { new: true, runValidators: true },
+    { new: true },
   )
-    .then((userData) => res.send(userData))
+    .then((userData) => (userData ? res.send(userData)
+      : res.status(404).send({ message: 'Запрашиваемый пользователь не найден' })))
     .catch(next);
 };
 // --------------------------------------------------------------------------
