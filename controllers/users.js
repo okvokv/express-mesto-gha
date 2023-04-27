@@ -42,10 +42,14 @@ const login = (req, res, next) => {
 
 // создать пользователя
 const createUser = (req, res, next) => {
-  const { email, password } = req.body;
+  const {
+    email, password, name, about, avatar,
+  } = req.body;
   // хеширование пароля
   bcrypt.hash(password, 10)
-    .then((hpassword) => user.create({ email, password: hpassword }))
+    .then((hpassword) => user.create({
+      email, password: hpassword, name, about, avatar,
+    }))
     .then((userData) => res.status(201).send({ email: userData.email, _id: userData.id }))
     .catch(next);
 };

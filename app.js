@@ -25,14 +25,14 @@ app.use(express.json());
 app.post('/signin', celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
-    password: Joi.string().required().min(8), // -----------------------------------//
+    password: Joi.string().required().min(8).max(30),
   }),
 }), login);
 
 app.post('/signup', celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
-    password: Joi.string().required().min(8), // -----------------------------------//
+    password: Joi.string().required().regex(/^(?=.*?[A-Za-z])(?=.*?[^\w\s]).{8,30}$/),
     name: Joi.string().min(2).max(30),
     about: Joi.string().min(2).max(30),
     avatar: Joi.string().regex(/^(https?:\/\/)(www\.)?[a-z0-9\-.]{2,}\.[a-z]{2,}(\/.*)?$/),
@@ -62,5 +62,3 @@ app.use((err, res, next) => {
 app.listen(PORT, () => {
   console.log(`App server listening at: http://localhost:${PORT}`);
 });
-
-// проверить надёжность поступающего пароля validator'ом
