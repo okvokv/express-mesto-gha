@@ -50,7 +50,7 @@ const createUser = (req, res, next) => {
     .then((hpassword) => user.create({
       email, password: hpassword, name, about, avatar,
     }))
-    .then((userData) => res.status(201).send({ _id: userData.id, email: userData.email }))
+    .then((userData) => res.status(201).send(userData))
     .catch(next);
 };
 //------------------------------------------------------------------------------
