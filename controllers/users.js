@@ -1,77 +1,79 @@
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
 const user = require('../models/users');
-const determineError = require('../errors');
 
 // получить всех пользователей
-const getUsers = (req, res) => {
+const getUsers = (req, res, next) => {
   user.find()
     .then((users) => res.send(users))
-    .catch((err) => {
-      const { ERROR_CODE, ERROR_MESSAGE } = determineError(err);
-      res.status(ERROR_CODE).send({ message: ERROR_MESSAGE });
-    });
+    .catch(next);
 };
 
 // получить данные любого пользователя по id
-const getUser = (req, res) => {
+const getUser = (req, res, next) => {
   user.findById(req.params.userId)
     .then((userData) => (userData ? res.send(userData)
       : res.status(404).send({ message: 'Запрашиваемый пользователь не найден' })))
-    .catch((err) => {
-      const { ERROR_CODE, ERROR_MESSAGE } = determineError(err);
-      res.status(ERROR_CODE).send({ message: ERROR_MESSAGE });
-    });
+    .catch(next);
 };
 // получить данные текущего пользователя
-// const getOwner = (req, res) => {
-//   user.findById(req.user._id)
-//    .then((userData) => res.send(userData))
-//    .catch((err) => {
-//      const { ERROR_CODE, ERROR_MESSAGE } = determineError(err);
-//      res.status(ERROR_CODE).send({ message: ERROR_MESSAGE });
-//    });
-// };
+const getCurrentUser = (req, res, next) => {
+  user.findById(req.user._id)
+    .then((userData) => res.send(userData))
+    .catch(next);
+};
 // ---------------------------------------------------------------------------
+// авторизовать пользователя
+const login = (req, res, next) => {
+  const { email, password } = req.body;
+  user.findByCredentials({ email, password })
+    .then((userData) => { //                разве здесь нет захешированного пароля ?
+      // создание жетона с зашифрованным _id пользователя на 7 дней
+      const token = jwt.sign({ _id: userData._id }, 'super-strong-secret', { expiresIn: '7d' });
+      res.cookie('jwt', token, {
+        maxAge: 3600000 * 24 * 7, // 7 дней
+        httpOnly: true,
+        sameSite: true,
+      })
+        .end(); // если у ответа нет тела, можно использовать метод end
+    })
+    .catch(next);
+};
+
 // создать пользователя
-const createUser = (req, res) => {
-  const { name, about, avatar } = req.body;
-  user.create({ name, about, avatar })
-    .then((userData) => res.status(201).send(userData))
-    .catch((err) => {
-      const { ERROR_CODE, ERROR_MESSAGE } = determineError(err);
-      res.status(ERROR_CODE).send({ message: ERROR_MESSAGE });
-    });
+const createUser = (req, res, next) => {
+  const { email, password } = req.body;
+  // хеширование пароля
+  bcrypt.hash(password, 10)
+    .then((hpassword) => user.create({ email, password: hpassword }))
+    .then((userData) => res.status(201).send({ email: userData.email, _id: userData.id }))
+    .catch(next);
 };
 //------------------------------------------------------------------------------
 // изменить данные текущего пользователя
-const updateUser = (req, res) => {
+const updateUser = (req, res, next) => {
   const { name, about } = req.body;
-  user.findByIdAndUpdate(
-    req.user._id,
+  user.findOneAndUpdate(
+    { _id: req.user._id }, // изменить данные может только владелец
     { name, about },
     { new: true, runValidators: true },
   )
     .then((userData) => (userData ? res.send(userData)
       : res.status(404).send({ message: 'Запрашиваемый пользователь не найден' })))
-    .catch((err) => {
-      const { ERROR_CODE, ERROR_MESSAGE } = determineError(err);
-      res.status(ERROR_CODE).send({ message: ERROR_MESSAGE });
-    });
+    .catch(next);
 };
 
 // изменить аватар текущего пользователя
-const updateAvatar = (req, res) => {
-  user.findByIdAndUpdate(
-    req.user._id,
+const updateAvatar = (req, res, next) => {
+  user.findOneAndUpdate(
+    { _id: req.user._id }, // изменить аватар может только владелец
     { avatar: req.body.avatar },
     { new: true, runValidators: true },
   )
     .then((userData) => res.send(userData))
-    .catch((err) => {
-      const { ERROR_CODE, ERROR_MESSAGE } = determineError(err);
-      res.status(ERROR_CODE).send({ message: ERROR_MESSAGE });
-    });
+    .catch(next);
 };
 // --------------------------------------------------------------------------
 module.exports = {
-  getUsers, getUser, createUser, updateUser, updateAvatar,
+  getUsers, getUser, getCurrentUser, createUser, login, updateUser, updateAvatar,
 };

@@ -1,81 +1,64 @@
 const card = require('../models/cards');
-const determineError = require('../errors');
 
 // получить все карточки
-const getCards = (req, res) => {
+const getCards = (req, res, next) => {
   card.find()
     .then((cards) => res.send(cards))
-    .catch((err) => {
-      const { ERROR_CODE, ERROR_MESSAGE } = determineError(err);
-      res.status(ERROR_CODE).send({ message: ERROR_MESSAGE });
-    });
+    .catch(next);
 };
 // --------------------------------------------------------------------------------
 // создать карточку
-const createCard = (req, res) => {
-  const ownerId = req.user._id; // временно
+const createCard = (req, res, next) => {
+  const ownerId = req.user._id;
   const { name, link } = req.body;
   card.create({ name, link, ownerId })
     .then((cardData) => res.status(201).send(cardData))
-    .catch((err) => {
-      const { ERROR_CODE, ERROR_MESSAGE } = determineError(err);
-      res.status(ERROR_CODE).send({ message: ERROR_MESSAGE });
-    });
+    .catch(next);
 };
 // ----------------------------------------------------------------------------------
 // удалить карточку
-const deleteCard = (req, res) => {
+const deleteCard = (req, res, next) => {
   // проверка наличия карточки
   card.findById(req.params.cardId)
     .then((cardData) => {
       if (cardData) {
-        card.findByIdAndRemove(req.params.cardId)
+        // карточку может удалить только владелец
+        card.findByIdAndRemove(req.params.cardId, { ownerId: req.user_id })
+          //   проверить вид ошибки при попытке удаления не владельцем,
+          //   может ввести валидацию, тогда она эту ошибку будет выдавать ? //
           .then(() => res.send({ message: 'Пост удален' }))
-          .catch((err) => {
-            const { ERROR_CODE, ERROR_MESSAGE } = determineError(err);
-            res.status(ERROR_CODE).send({ message: ERROR_MESSAGE });
-          });
+          .catch(next);
         return;
       }
       res.status(404).send({ message: 'Запрашиваемая карточка не найдена' });
     })
-    .catch((err) => {
-      const { ERROR_CODE, ERROR_MESSAGE } = determineError(err);
-      res.status(ERROR_CODE).send({ message: ERROR_MESSAGE });
-    });
+    .catch(next);
 };
 
 // поставить like
-const putLike = (req, res) => {
-  const ownerId = req.user._id; // временно
+const putLike = (req, res, next) => {
   card.findByIdAndUpdate(
     req.params.cardId,
-    { $addToSet: { likes: ownerId } }, // добавить like текущего пользователя
-    // в массив, если такого там нет
+    { $addToSet: { likes: req.user._id } }, // текущий пользователь может поставить лайк
+    // если в массиве его нет
     { new: true },
   )
     .then((cardData) => (cardData ? res.send(cardData)
       : res.status(404).send({ message: 'Запрашиваемая карточка не найдена' })))
-    .catch((err) => {
-      const { ERROR_CODE, ERROR_MESSAGE } = determineError(err);
-      res.status(ERROR_CODE).send({ message: ERROR_MESSAGE });
-    });
+    .catch(next);
 };
 
 // удалить like
-const deleteLike = (req, res) => {
-  const ownerId = req.user._id; // временно
+const deleteLike = (req, res, next) => {
   card.findByIdAndUpdate(
     req.params.cardId,
-    { $pull: { likes: ownerId } }, // убрать like текущего пользователя из массива
+    { $pull: { likes: req.user._id } }, // текущий пользователь может удалить лайк
+    // если он в массиве есть
     { new: true },
   )
     .then((cardData) => (cardData ? res.send(cardData)
       : res.status(404).send({ message: 'Запрашиваемая карточка не найдена' })))
-    .catch((err) => {
-      const { ERROR_CODE, ERROR_MESSAGE } = determineError(err);
-      res.status(ERROR_CODE).send({ message: ERROR_MESSAGE });
-    });
+    .catch(next);
 };
 
 module.exports = {

@@ -1,6 +1,9 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const { errors, celebrate, Joi } = require('celebrate');
 const config = require('./config');
+const { login, createUser } = require('./controllers/users');
+const auth = require('./middlewares/auth');
 const usersRouter = require('./routes/users');
 const cardsRouter = require('./routes/cards');
 
@@ -8,7 +11,9 @@ const cardsRouter = require('./routes/cards');
 const { PORT } = config;
 
 // подключение базы данных
-mongoose.connect('mongodb://0.0.0.0:27017/mestodb');
+mongoose.connect('mongodb://0.0.0.0:27017/mestodb')
+  .then(() => console.log('MongoDB connected'))
+  .catch((err) => console.log(err));
 
 // подключение серверного модуля для интерпретации файла
 const app = express();
@@ -16,18 +21,46 @@ const app = express();
 // сборка объекта из JSON-формата
 app.use(express.json());
 
-// мидлваре добавления к каждому запросу объекта req.user со значением _id пользователя
-app.use((req, res, next) => {
-  req.user = { _id: '643d9e02682fc5675c4ffb67' }; // _id тестового пользователя
-  next();
-});
-
 // подключение роутеров
+app.post('/signin', celebrate({
+  body: Joi.object().keys({
+    email: Joi.string().required().email(),
+    password: Joi.string().required().min(8), // -----------------------------------//
+  }),
+}), login);
+
+app.post('/signup', celebrate({
+  body: Joi.object().keys({
+    email: Joi.string().required().email(),
+    password: Joi.string().required().min(8), // -----------------------------------//
+    name: Joi.string().min(2).max(30),
+    about: Joi.string().min(2).max(30),
+    avatar: Joi.string().regex(/^(https?:\/\/)(www\.)?[a-z0-9\-.]{2,}\.[a-z]{2,}(\/.*)?$/),
+  }),
+}), createUser);
+
+// защита аутентификацией всех роутеров ниже
+app.use(auth);
+
 app.use('/users', usersRouter);
 app.use('/cards', cardsRouter);
-app.use('*', ((req, res) => res.status(404).send({ message: 'Запрошен несуществующий маршрут' })));
+
+// обработчик ошибок маршрутизации
+app.use('*', ((res) => res.status(404).send({ message: 'Запрошен несуществующий маршрут' })));
+
+// обработчик ошибок celebrate
+app.use(errors());
+
+// обработчик остальных ошибок
+app.use((err, res, next) => {
+  const { statusCode = 500 } = err;
+  res.status(statusCode).send({ message: statusCode === 500 ? 'На сервере произошла ошибка' : err.message });
+  next();
+});
 
 // включение прослушивания  порта
 app.listen(PORT, () => {
   console.log(`App server listening at: http://localhost:${PORT}`);
 });
+
+// проверить надёжность поступающего пароля validator'ом
