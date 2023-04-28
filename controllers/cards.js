@@ -24,8 +24,7 @@ const deleteCard = (req, res, next) => {
       if (cardData) {
         // карточку может удалить только владелец
         card.findByIdAndRemove(req.params.cardId, { ownerId: req.user_id })
-          //   проверить вид ошибки при попытке удаления не владельцем 403,
-          //   может ввести валидацию, тогда она эту ошибку будет выдавать ? //
+          //   проверить вид ошибки при попытке удаления не владельцем 403 //
           .then(() => res.send({ message: 'Пост удален' }))
           .catch(next);
         return;

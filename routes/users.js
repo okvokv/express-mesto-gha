@@ -24,7 +24,7 @@ usersRouter.patch('/me', celebrate({
 // обработка запроса  изменения аватара текущего пользователя
 usersRouter.patch('/me/avatar', celebrate({
   body: Joi.object().keys({
-    avatar: Joi.string().required().regex(/^https?:\/\/(www\.)?[a-zA-Z\d-._~:/?#[\]@!$&'()*+,;=]+(#\w*)?$/),
+    avatar: Joi.string().required().regex(/^https?:\/\/\S+\s*$/),
   }),
 }), updateAvatar);
 

@@ -50,7 +50,11 @@ const createUser = (req, res, next) => {
     .then((hpassword) => user.create({
       email, password: hpassword, name, about, avatar,
     }))
-    .then((userData) => res.status(201).send(userData))
+    .then((userData) => {
+      // userData.toObject();
+      delete user.password;
+      res.status(201).send(userData);
+    })
     .catch(next);
 };
 //------------------------------------------------------------------------------
