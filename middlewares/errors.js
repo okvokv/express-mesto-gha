@@ -1,6 +1,6 @@
 // обработка ошибок
 class serverError extends Error {
-  constructor(err) {
+  constructor(err, message) {
     super(message);
     this.err.name = err.name;
   }
