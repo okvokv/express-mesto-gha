@@ -48,7 +48,7 @@ const login = (req, res, next) => {
             httpOnly: true,
             sameSite: true,
           });
-          res.send({ message: 'Аутентификация успешна.' });
+          res.send({ message: 'Авторизация успешна.' });
           // если у ответа нет тела, можно использовать метод end
         })
         .catch((err) => {
@@ -83,6 +83,7 @@ const createUser = (req, res, next) => {
 // изменить данные текущего пользователя
 const updateUser = (req, res, next) => {
   const { name, about } = req.body;
+  console.log(req.user._id);
   user.findOneAndUpdate(
     { _id: req.user._id }, // изменить данные может только владелец
     { name, about },
