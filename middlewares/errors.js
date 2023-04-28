@@ -1,9 +1,9 @@
 // обработка ошибок
 class serverError extends Error {
-  // constructor(message) {
-  //  super(message);
-  // this.err.name = err.name;
-  // }
+  constructor(err) {
+    super(message);
+    this.err.name = err.name;
+  }
 
   determineError() {
     if (this.err.name === 'ValidationError') {
@@ -69,7 +69,7 @@ class serverError extends Error {
   }
 }
 
-module.exports = serverError;
+module.exports = serverError.determineError;
 
 // 401 — передан неверный логин или пароль,
 // также эту ошибку возвращает аутентификационный middleware,

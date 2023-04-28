@@ -6,6 +6,7 @@ const { login, createUser } = require('./controllers/users');
 const auth = require('./middlewares/auth');
 const usersRouter = require('./routes/users');
 const cardsRouter = require('./routes/cards');
+const determineError = require('./middlewares/errors');
 
 // назначение порта сервера
 const { PORT } = config;
@@ -53,8 +54,8 @@ app.use(errors());
 
 // обработчик остальных ошибок
 app.use((err, res, next) => {
-  const { statusCode = 500 } = err;
-  res.status(statusCode).send({ message: statusCode === 500 ? 'На сервере произошла ошибка' : err.message });
+  const { statusCode, message } = determineError(err);
+  res.status(statusCode).send({ message: statusCode === 500 ? 'На сервере произошла ошибка' : message });
   next();
 });
 
