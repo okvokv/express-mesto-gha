@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 // проверка жетона при аутентификации пользователя
 function auth(req, res, next) {
   const { authorization } = req.headers; // req.cookies;
+  console.log('аутентификация', authorization);
   if (authorization && authorization.startsWith('Bearer ')) {
     const token = authorization.replace('Bearer ', '');
 

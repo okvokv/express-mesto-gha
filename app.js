@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const cookieParser = require('cookie-parser');
 const { errors, celebrate, Joi } = require('celebrate');
 const config = require('./config');
 const { login, createUser } = require('./controllers/users');
@@ -19,6 +20,8 @@ mongoose.connect('mongodb://0.0.0.0:27017/mestodb')
 // подключение серверного модуля для интерпретации файла
 const app = express();
 
+// сборка приходящих cookies
+app.use(cookieParser());
 // сборка объекта из JSON-формата
 app.use(express.json());
 

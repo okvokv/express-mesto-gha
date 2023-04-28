@@ -43,16 +43,17 @@ const login = (req, res, next) => {
           const token = createToken(userData);
           console.log(token);
           // выдача жетона пользователю
-          res.cookie('jwt', token, {
-            maxAge: 3600000 * 24 * 7, // 7 дней
-            httpOnly: true,
-            sameSite: true,
-          });
+          // res.cookie('jwt', token, {
+          // maxAge: 3600000 * 24 * 7, // 7 дней
+          // httpOnly: true,
+          // sameSite: true,
+          // });
+          res.send({ token });
           res.send({ message: 'Авторизация успешна.' });
           // если у ответа нет тела, можно использовать метод end
         })
         .catch((err) => {
-          console.log(err.message);
+          console.log('сообщение', err.message);
           next('Неправильные почта или пароль');
           // Promise.reject(new Error('Неправильные почта или пароль'));
         });
@@ -83,7 +84,7 @@ const createUser = (req, res, next) => {
 // изменить данные текущего пользователя
 const updateUser = (req, res, next) => {
   const { name, about } = req.body;
-  console.log(req.user._id);
+  console.log('_id пользователя', req.user._id);
   user.findOneAndUpdate(
     { _id: req.user._id }, // изменить данные может только владелец
     { name, about },
