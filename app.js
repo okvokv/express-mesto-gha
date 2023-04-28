@@ -54,8 +54,8 @@ app.use(errors());
 
 // обработчик остальных ошибок
 app.use((err, res, next) => {
-  const { statusCode, message } = determineError(err);
-  res.status(statusCode).send({ message: statusCode === 500 ? 'На сервере произошла ошибка' : message });
+  const { statusCode, errmessage } = determineError(err);
+  res.status(statusCode).send({ message: errmessage });
   next();
 });
 
