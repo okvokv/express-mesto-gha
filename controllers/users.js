@@ -28,7 +28,7 @@ function createToken(userData) {
   return jwt.sign(
     { _id: userData._id },
     'super-strong-secret',
-    { expiresIn: '7d' },
+    { expiresIn: '7d' }
   );
 }
 
@@ -41,13 +41,15 @@ const login = (req, res, next) => {
         .then(() => {
           // if (matched) {
           const token = createToken(userData);
+          console.log(token);
           // выдача жетона пользователю
-          res.cookie('jwt', { token }, {
+          res.cookie('jwt', token, {
             maxAge: 3600000 * 24 * 7, // 7 дней
             httpOnly: true,
             sameSite: true,
-          })
-            .end(); // если у ответа нет тела, можно использовать метод end
+          });
+          res.send({ message: 'Аутентификация успешна.' });
+          // если у ответа нет тела, можно использовать метод end
         })
         .catch((err) => {
           console.log(err.message);
