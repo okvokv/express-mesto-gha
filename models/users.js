@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
-const bcrypt = require('bcryptjs');
 
 const userSchema = new mongoose.Schema(
   {
@@ -51,20 +50,5 @@ const userSchema = new mongoose.Schema(
     },
   },
 );
-
-// добавление собственного метода обработки
-// userSchema.statics.findByCredentials = function add(email, password, res, next) {
-// return this.find({ email }).select('+password') // вернуть ответ из базы с паролем
-// .then((userData) => bcrypt.compare(password, userData.password))
-// .then((matched) => {
-// console.log(matched); // --- //
-// if (matched) {
-// res.send({ message: 'Аутентификация успешна' });
-// return; // или return userData
-// }
-// Promise.reject(new Error('Неправильные почта или пароль')); // нужен ли return ?//
-// })
-// .catch(next);
-// };
 
 module.exports = mongoose.model('user', userSchema);
