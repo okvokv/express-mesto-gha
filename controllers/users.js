@@ -23,19 +23,37 @@ const getCurrentUser = (req, res, next) => {
     .catch(next);
 };
 // ---------------------------------------------------------------------------
+// создание жетона с зашифрованным _id пользователя на 7 дней
+function createToken(userData) {
+  return jwt.sign(
+    { _id: userData._id },
+    'super-strong-secret',
+    { expiresIn: '7d' },
+  );
+}
+
 // авторизовать пользователя
 const login = (req, res, next) => {
   const { email, password } = req.body;
-  user.findByCredentials({ email, password })
-    .then((userData) => { // здесь есть захешированный пароль
-      // создание жетона с зашифрованным _id пользователя на 7 дней
-      const token = jwt.sign({ _id: userData._id }, 'super-strong-secret', { expiresIn: '7d' });
-      res.cookie('jwt', token, {
-        maxAge: 3600000 * 24 * 7, // 7 дней
-        httpOnly: true,
-        sameSite: true,
-      })
-        .end(); // если у ответа нет тела, можно использовать метод end
+  user.findOne({ email }).select('+password')
+    .then((userData) => {
+      bcrypt.compare(password, userData.password)
+        .then(() => {
+          // if (matched) {
+          const token = createToken(userData);
+          // выдача жетона пользователю
+          res.cookie('jwt', token, {
+            maxAge: 3600000 * 24 * 7, // 7 дней
+            httpOnly: true,
+            sameSite: true,
+          })
+            .end(); // если у ответа нет тела, можно использовать метод end
+        })
+        .catch((err) => {
+          console.log(err.message);
+          next('Неправильные почта или пароль');
+          // Promise.reject(new Error('Неправильные почта или пароль'));
+        });
     })
     .catch(next);
 };
