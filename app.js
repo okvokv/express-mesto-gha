@@ -49,14 +49,14 @@ app.use(auth);
 app.use('/users', usersRouter);
 app.use('/cards', cardsRouter);
 
+// обработчик ошибок маршрутизации
+app.use('*', ((req, res) => res.status(404).send({ message: 'Запрошен несуществующий маршрут' })));
+
 // обработчик ошибок celebrate
 app.use(errors());
 
-// обработчик ошибок маршрутизации
-app.use('*', ((res) => res.status(404).send({ message: 'Запрошен несуществующий маршрут' })));
-
 // обработчик остальных ошибок
-app.use((err, res, next) => {
+app.use((err, req, res, next) => {
   console.log('из app', err.message);
   const { statusCode, errmessage } = determineError(err);
   res.status(statusCode).send({ message: errmessage });

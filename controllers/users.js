@@ -27,7 +27,7 @@ function createToken(userData) {
   return jwt.sign(
     { _id: userData._id },
     'super-strong-secret',
-    { expiresIn: '7d' }
+    { expiresIn: '7d' },
   );
 }
 
@@ -37,25 +37,24 @@ const login = (req, res, next) => {
   user.findOne({ email }).select('+password')
     .then((userData) => {
       bcrypt.compare(password, userData.password)
-        .then(() => {
-          // if (matched) {
-          const token = createToken(userData);
-          console.log(token);
-          // выдача жетона пользователю
-          // res.cookie('jwt', token, {
-          // maxAge: 3600000 * 24 * 7, // 7 дней
-          // httpOnly: true,
-          // sameSite: true,
-          // });
-          res.send({ token });
-          res.send({ message: 'Авторизация успешна.' });
-          // если у ответа нет тела, можно использовать метод end
-        })
-        .catch((err) => {
-          console.log('сообщение', err.message);
+        .then((matched) => {
+          if (matched) {
+            const token = createToken(userData);
+            // выдача жетона пользователю
+            // res.cookie('jwt', token, {
+            // maxAge: 3600000 * 24 * 7, // 7 дней
+            // httpOnly: true,
+            // sameSite: true,
+            // });
+            res.send({ token });
+            res.send({ message: 'Авторизация успешна.' });
+            // если у ответа нет тела, можно использовать метод end
+            return;
+          }
           next('Неправильные почта или пароль');
           // Promise.reject(new Error('Неправильные почта или пароль'));
-        });
+        })
+        .catch(next);
     })
     .catch(next);
 };
@@ -83,7 +82,6 @@ const createUser = (req, res, next) => {
 // изменить данные текущего пользователя
 const updateUser = (req, res, next) => {
   const { name, about } = req.body;
-  console.log('_id пользователя', req.user._id);
   user.findOneAndUpdate(
     { _id: req.user._id }, // изменить данные может только владелец
     { name, about },
