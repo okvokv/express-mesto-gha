@@ -3,6 +3,7 @@ class serverError extends Error {
   constructor(err, message) {
     super(message);
     this.err.name = err.name;
+    this.err.code = err.code;
   }
 
   determineError() {
@@ -31,7 +32,7 @@ class serverError extends Error {
       console.log(statusCode);
       return { statusCode, errmessage };
     }
-    if (this.err.name === 'JWT') {                          //---//
+    if (this.err.name === 'JWT1') {                          //---//
       // ошибка авторизации преданы неверная почта или пароль
       const statusCode = 401;
       const errmessage = 'Неправильные почта или пароль';
@@ -56,10 +57,10 @@ class serverError extends Error {
       console.log(statusCode);
       return { statusCode, errmessage };
     }
-    if (this.err.code === 11000) {
+    if (this.err.message.includes('E11000')) {
       const statusCode = 409;
       const errmessage = 'Пользователь с таким email уже существует';
-      console.log(statusCode);
+      console.log('база', statusCode);
       return { statusCode, errmessage };
     }
     const statusCode = 500;

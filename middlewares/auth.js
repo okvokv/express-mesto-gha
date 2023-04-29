@@ -12,7 +12,11 @@ function auth(req, res, next) {
       req.user = payload;
       next();
       return;
-    } catch (err) { next(err.message); return; } // не корректный жетон
+    } catch (err) {
+      next(err.message);
+      console.log('некорр. жетон', err);
+      return;
+    } // не корректный жетон
   }
   res.status(401).send({ message: 'Необходима авторизация' });
 }
