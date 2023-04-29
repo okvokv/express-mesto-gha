@@ -42,8 +42,7 @@ const putLike = (req, res, next) => {
     // если в массиве его нет
     { new: true },
   )
-    .then((cardData) => (cardData ? res.send(cardData)
-      : res.status(404).send({ message: 'Запрашиваемая карточка не найдена' })))
+    .then((cardData) => res.send(cardData))
     .catch(next);
 };
 
@@ -55,8 +54,7 @@ const deleteLike = (req, res, next) => {
     // если в массиве он уже есть
     { new: true },
   )
-    .then((cardData) => (cardData ? res.send(cardData)
-      : res.status(404).send({ message: 'Запрашиваемая карточка не найдена' })))
+    .then((cardData) => res.send(cardData))
     .catch(next);
 };
 
