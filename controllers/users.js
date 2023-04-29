@@ -12,8 +12,7 @@ const getUsers = (req, res, next) => {
 // получить данные любого пользователя по id
 const getUser = (req, res, next) => {
   user.findById(req.params.userId)
-    .then((userData) => (userData ? res.send(userData)
-      : res.status(404).send({ message: 'Запрашиваемый пользователь не найден' })))
+    .then((userData) => res.send(userData))
     .catch(next);
 };
 // получить данные текущего пользователя
@@ -90,8 +89,7 @@ const updateUser = (req, res, next) => {
     { name, about },
     { new: true },
   )
-    .then((userData) => (userData ? res.send(userData)
-      : res.status(404).send({ message: 'Запрашиваемый пользователь не найден' })))
+    .then((userData) => res.send(userData))
     .catch(next);
 };
 
@@ -102,8 +100,7 @@ const updateAvatar = (req, res, next) => {
     { avatar: req.body.avatar },
     { new: true },
   )
-    .then((userData) => (userData ? res.send(userData)
-      : res.status(404).send({ message: 'Запрашиваемый пользователь не найден' })))
+    .then((userData) => res.send(userData))
     .catch(next);
 };
 // --------------------------------------------------------------------------
