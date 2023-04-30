@@ -49,9 +49,7 @@ app.use(auth);
 app.use('/users', usersRouter);
 app.use('/cards', cardsRouter);
 
-// обработчик ошибок маршрутизации
-app.post.use('*', ((req, res) => res.status(404).send({ message: 'Запрошен несуществующий маршрут' })));
-app.use('*', ((req, res) => res.status(404).send({ message: 'Запрошен несуществующий маршрут' })));
+app.all('*', ((req, res) => res.status(404).send({ message: 'Запрошен несуществующий маршрут' })));
 
 // обработчик ошибок celebrate
 app.use(errors());
