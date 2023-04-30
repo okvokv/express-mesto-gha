@@ -9,9 +9,9 @@ const getUsers = (req, res, next) => {
     .catch(next);
 };
 
-// получить данные любого пользователя по id
-const getUser = (req, res, next) => {
-  user.findById(req.params.userId)
+// получить данные текущего пользователя
+const getCurrentUser = (req, res, next) => {
+  user.findById(req.user._id)
     .then((userData) => {
       if (userData) {
         res.send(userData);
@@ -21,9 +21,10 @@ const getUser = (req, res, next) => {
     })
     .catch(next);
 };
-// получить данные текущего пользователя
-const getCurrentUser = (req, res, next) => {
-  user.findById(req.user._id)
+
+// получить данные любого пользователя по id
+const getUser = (req, res, next) => {
+  user.findById(req.params.userId)
     .then((userData) => {
       if (userData) {
         res.send(userData);

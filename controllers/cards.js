@@ -19,13 +19,16 @@ const createCard = (req, res, next) => {
 // удалить карточку
 const deleteCard = (req, res, next) => {
   card.findByIdAndRemove(req.params.cardId, { ownerId: req.user_id })
-    // карточку может удалить только владелец
-    // проверить вид ошибки при попытке удаления не владельцем 403 //
     .then((cardData) => {
       // проверка существования карточки  с данным _id в бд
       if (cardData) {
-        res.send({ message: 'Пост удален' });
-        console.log(cardData);
+        // карточку может удалить только владелец
+        if (cardData.ownerId === req.user._id) {
+          res.send({ message: 'Пост удален' });
+          console.log(cardData);
+          return;
+        }
+        next({ message: 'Нет прав на удаление' });
         return;
       }
       next({ message: 'Запрашиваемая карточка не найдена' });
