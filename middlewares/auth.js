@@ -17,5 +17,3 @@ function auth(req, res, next) {
 }
 
 module.exports = auth;
-
-// преобразовать в асинхронную ф-ию //

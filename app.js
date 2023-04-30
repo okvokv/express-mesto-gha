@@ -46,15 +46,16 @@ app.post('/signup', celebrate({
 app.use('/users', auth, usersRouter);
 app.use('/cards', auth, cardsRouter);
 
+app.use('*', ((req, res) => res.status(404).send({ message: 'Запрошен несуществующий маршрут' })));
+
 // обработчик ошибок celebrate
 app.use(errors());
 
-app.use('*', ((req, res) => res.status(404).send({ message: 'Запрошен несуществующий маршрут' })));
-
 // обработчик остальных ошибок
 app.use((err, req, res, next) => {
-  console.log('app', err.name, err.message);
+  console.log('app', err.name, err.message); // ----------------------------//
   const { statusCode, errMessage } = determineError(err);
+  console.log('app', statusCode, errMessage);
   res.status(statusCode).send({ message: errMessage });
   next();
 });

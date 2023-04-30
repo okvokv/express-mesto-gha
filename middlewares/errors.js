@@ -34,12 +34,12 @@ function determineError(err) {
     const errMessage = 'Неправильные почта или пароль';
     return { statusCode, errMessage };
   }
-  if (err.mesage.includes('Нет прав на удаление')) {
+  if (err.message.includes('Нет прав на удаление')) {
     const statusCode = 403;
     const errMessage = 'Вы не являетесь владельцем данной карточки';
     return { statusCode, errMessage };
   }
-  if ((err.name === 'MongooseError' && err.message.includes('users')) || (err.message.includes('Запрашиваемый пользователь не найден'))) {
+  if ((err.name === 'MongooseError' && err.message.includes('users')) || err.message.includes('Запрашиваемый пользователь не найден')) {
     const statusCode = 404;
     const errMessage = 'Запрашиваемый/е пользователь/ли не найден/ны';
     return { statusCode, errMessage };
