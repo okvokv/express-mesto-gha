@@ -3,23 +3,19 @@ const jwt = require('jsonwebtoken');
 // проверка жетона при аутентификации пользователя
 function auth(req, res, next) {
   const { authorization } = req.headers; // req.cookies;
-  console.log('аутентификация', authorization);
+  req.user = {};
   if (authorization && authorization.startsWith('Bearer ')) {
     const token = authorization.replace('Bearer ', '');
-
     try {
       const payload = jwt.verify(token, 'super-strong-secret');
       req.user = payload;
-      console.log(req.user);
       next();
-      return;
-    } catch (err) {
-      next(err.message);
-      console.log('некорр. жетон', err);
-      return;
-    } // не корректный жетон
+    } catch (err) { next(err); }
+    return;
   }
-  res.status(401).send({ message: 'Необходима авторизация' });
+  next({ message: 'Некорректный заголовок' });
 }
 
 module.exports = auth;
+
+// преобразовать в асинхронную ф-ию //

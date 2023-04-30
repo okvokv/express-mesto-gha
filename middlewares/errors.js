@@ -6,67 +6,57 @@
 // }
 // }
 
-function determineError() {
-  if (this.err.name === 'ValidationError') {
+function determineError(err) {
+  if (err.name === 'ValidationError') {
     const statusCode = 400;
-    const errmessage = 'Ошибка валидации. Переданы некорректные данные';
-    console.log(statusCode);
-    return { statusCode, errmessage };
+    const errMessage = 'Ошибка валидации. Переданы некорректные данные';
+    return { statusCode, errMessage };
   }
-  if ((this.err.name === 'MongooseError') && (this.err.message.includes('timed out'))) {
+  if (err.name === 'MongooseError' && err.message.includes('timed out')) {
     const statusCode = 400;
-    const errmessage = 'Ошибка базы данных.';
-    console.log(statusCode);
-    return { statusCode, errmessage };
+    const errMessage = 'Ошибка базы данных.';
+    return { statusCode, errMessage };
   }
-  if (this.err.name === 'CastError') {
+  if (err.name === 'CastError') {
     const statusCode = 400;
-    const errmessage = 'Передан некорректный id';
-    console.log(statusCode);
-    return { statusCode, errmessage };
+    const errMessage = 'Передан некорректный id';
+    return { statusCode, errMessage };
   }
-  if (this.err.name === 'JWT') {                          //---//
-    // ошибка аутентификации
+  if (err.message.includes('invalid token') || err.message.includes('Некорректный заголовок')) {
+    // ошибка аутентификации, передан некорректный жетон
     const statusCode = 401;
-    const errmessage = 'Передан некорректный жетон';
-    console.log(statusCode);
-    return { statusCode, errmessage };
+    const errMessage = 'Передан некорректно жетон / Необходима авторизация';
+    return { statusCode, errMessage };
   }
-  if (this.err.name === 'JWT1') {                          //---//
+  if (err.message.includes('Неправильные почта или пароль') || err.message.includes('password')) {
     // ошибка авторизации преданы неверная почта или пароль
     const statusCode = 401;
-    const errmessage = 'Неправильные почта или пароль';
-    console.log(statusCode);
-    return { statusCode, errmessage };
+    const errMessage = 'Неправильные почта или пароль';
+    return { statusCode, errMessage };
   }
-  if (this.err.name === ' ') {                            //---//
+  if (err.name === ' ') {                            //---//
     const statusCode = 403;
-    const errmessage = 'Вы не являетесь владельцем данной карточки';
-    console.log(statusCode);
-    return { statusCode, errmessage };
+    const errMessage = 'Вы не являетесь владельцем данной карточки';
+    return { statusCode, errMessage };
   }
-  if ((this.err.name === 'MongooseError') && (this.err.message.includes('users'))) {
+  if ((err.name === 'MongooseError' && err.message.includes('users')) || (err.message.includes('Запрашиваемый пользователь не найден'))) {
     const statusCode = 404;
-    const errmessage = 'Запрашиваемый/е пользователь/ли не найден/ны';
-    console.log(statusCode);
-    return { statusCode, errmessage };
+    const errMessage = 'Запрашиваемый/е пользователь/ли не найден/ны';
+    return { statusCode, errMessage };
   }
-  if ((this.err.name === 'MongooseError') && (this.err.message.includes('cards'))) {
+  if ((err.name === 'MongooseError' && err.message.includes('cards')) || err.message.includes('Запрашиваемая карточка не найдена')) {
     const statusCode = 404;
-    const errmessage = 'Запрашиваемая/е карточка/ки не найдена/ны';
-    console.log(statusCode);
-    return { statusCode, errmessage };
+    const errMessage = 'Запрашиваемая/е карточка/ки не найдена/ны';
+    return { statusCode, errMessage };
   }
-  if (this.err.message.includes('E11000')) {
+  if (err.message.includes('E11000')) {
     const statusCode = 409;
-    const errmessage = 'Пользователь с таким email уже существует';
-    console.log('база', statusCode);
-    return { statusCode, errmessage };
+    const errMessage = 'Пользователь с таким email уже существует';
+    return { statusCode, errMessage };
   }
   const statusCode = 500;
-  const message = 'На сервере произошла ошибка';
-  console.log(statusCode);
-  return { statusCode, message };
+  const errMessage = 'На сервере произошла ошибка';
+  return { statusCode, errMessage };
 }
 
 // const serverError = new ServerError().determineError();
@@ -74,8 +64,7 @@ module.exports = determineError;
 
 // 401 — передан неверный логин или пароль, этот код ошибки также
 // возвращает аутентификационный middleware, если передан неверный JWT;
-// 403 — попытка удалить чужую карточку;
-// 409 — при регистрации указан email, который уже существует на сервере.
+// 403 — попытка удалить чужую карточку или изменить данные другого пользователя;
 
 // Для ошибок созданы классы конструкторы ошибок, наследуемые от Error,
 // классы конструкторы ошибок с одинаковым статус-кодом не дублируются

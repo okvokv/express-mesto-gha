@@ -43,21 +43,18 @@ app.post('/signup', celebrate({
   }),
 }), createUser);
 
-// защита аутентификацией всех роутеров ниже
-app.use(auth);
-
-app.use('/users', usersRouter);
-app.use('/cards', cardsRouter);
-
-app.all('*', ((req, res) => res.status(404).send({ message: 'Запрошен несуществующий маршрут' })));
+app.use('/users', auth, usersRouter);
+app.use('/cards', auth, cardsRouter);
 
 // обработчик ошибок celebrate
 app.use(errors());
 
+app.use('*', ((req, res) => res.status(404).send({ message: 'Запрошен несуществующий маршрут' })));
+
 // обработчик остальных ошибок
 app.use((err, req, res, next) => {
+  console.log('app', err.name, err.message);
   const { statusCode, errMessage } = determineError(err);
-  console.log('из app', statusCode, errMessage);
   res.status(statusCode).send({ message: errMessage });
   next();
 });

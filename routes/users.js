@@ -1,11 +1,14 @@
 const { errors, celebrate, Joi } = require('celebrate');
 const usersRouter = require('express').Router();
 const {
-  getUsers, getUser, getCurrentUser, updateUser, updateAvatar,
+  getUsers, getUser, getCurrentUser, updateCurrentUser, updateAvatar,
 } = require('../controllers/users');
 
 // обработка запроса получения пользователей
 usersRouter.get('', getUsers);
+
+// обработка запроса получения данных текущего пользователя
+usersRouter.get('/me', getCurrentUser);
 
 // обработка запроса получения данных пользователя по id
 usersRouter.get('/:userId', celebrate({
@@ -14,16 +17,13 @@ usersRouter.get('/:userId', celebrate({
   }),
 }), getUser);
 
-// обработка запроса получения данных текущего пользователя
-usersRouter.get('/me', getCurrentUser);
-
 // обработка запроса изменения данных текущего пользователя
 usersRouter.patch('/me', celebrate({
   body: Joi.object().keys({
     name: Joi.string().required().min(2).max(30),
     about: Joi.string().required().min(2).max(30),
   }),
-}), updateUser);
+}), updateCurrentUser);
 
 // обработка запроса  изменения аватара текущего пользователя
 usersRouter.patch('/me/avatar', celebrate({

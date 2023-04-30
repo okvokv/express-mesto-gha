@@ -17,7 +17,7 @@ const getUser = (req, res, next) => {
         res.send(userData);
         return;
       }
-      next({ message: '404 Запрашиваемый пользователь не найден' });
+      next({ message: 'Запрашиваемый пользователь не найден' });
     })
     .catch(next);
 };
@@ -29,7 +29,7 @@ const getCurrentUser = (req, res, next) => {
         res.send(userData);
         return;
       }
-      next({ message: '404 Запрашиваемый пользователь не найден' });
+      next({ message: 'Запрашиваемый пользователь не найден' });
     })
     .catch(next);
 };
@@ -53,18 +53,17 @@ const login = (req, res, next) => {
         .then((matched) => {
           if (matched) {
             const token = createToken(userData);
-            // выдача жетона пользователю
+            // выдача жетона пользователю в coookies
             // res.cookie('jwt', token, {
             // maxAge: 3600000 * 24 * 7, // 7 дней
             // httpOnly: true,
             // sameSite: true,
             // });
-            res.send({ token });
-            res.send({ message: 'Авторизация успешна.' });
-            // если у ответа нет тела, можно использовать метод end
+            // если у ответа нет тела, можно использовать метод .end();
+            res.send({ token, message: 'Авторизация успешна.' });
             return;
           }
-          next('Неправильные почта или пароль');
+          next({ message: 'Неправильные почта или пароль' });
         })
         .catch(next);
     })
@@ -92,7 +91,7 @@ const createUser = (req, res, next) => {
 };
 //------------------------------------------------------------------------------
 // изменить данные текущего пользователя
-const updateUser = (req, res, next) => {
+const updateCurrentUser = (req, res, next) => {
   const { name, about } = req.body;
   user.findOneAndUpdate(
     { _id: req.user._id }, // изменить данные может только владелец
@@ -115,5 +114,5 @@ const updateAvatar = (req, res, next) => {
 };
 // --------------------------------------------------------------------------
 module.exports = {
-  getUsers, getUser, getCurrentUser, createUser, login, updateUser, updateAvatar,
+  getUsers, getUser, getCurrentUser, createUser, login, updateCurrentUser, updateAvatar,
 };
