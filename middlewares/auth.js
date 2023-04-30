@@ -10,6 +10,7 @@ function auth(req, res, next) {
     try {
       const payload = jwt.verify(token, 'super-strong-secret');
       req.user = payload;
+      console.log(req.user);
       next();
       return;
     } catch (err) {

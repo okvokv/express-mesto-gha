@@ -50,6 +50,7 @@ app.use('/users', usersRouter);
 app.use('/cards', cardsRouter);
 
 // обработчик ошибок маршрутизации
+app.post.use('*', ((req, res) => res.status(404).send({ message: 'Запрошен несуществующий маршрут' })));
 app.use('*', ((req, res) => res.status(404).send({ message: 'Запрошен несуществующий маршрут' })));
 
 // обработчик ошибок celebrate
@@ -57,9 +58,9 @@ app.use(errors());
 
 // обработчик остальных ошибок
 app.use((err, req, res, next) => {
-  console.log('из app', err.message);
-  const { statusCode, errmessage } = determineError(err);
-  res.status(statusCode).send({ message: errmessage });
+  const { statusCode, errMessage } = determineError(err);
+  console.log('из app', statusCode, errMessage);
+  res.status(statusCode).send({ message: errMessage });
   next();
 });
 

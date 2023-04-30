@@ -12,15 +12,28 @@ const getUsers = (req, res, next) => {
 // получить данные любого пользователя по id
 const getUser = (req, res, next) => {
   user.findById(req.params.userId)
-    .then((userData) => res.send(userData))
+    .then((userData) => {
+      if (userData) {
+        res.send(userData);
+        return;
+      }
+      next({ message: 'Запрашиваемая карточка не найдена' });
+    })
     .catch(next);
 };
 // получить данные текущего пользователя
 const getCurrentUser = (req, res, next) => {
   user.findById(req.user._id)
-    .then((userData) => res.send(userData))
+    .then((userData) => {
+      if (userData) {
+        res.send(userData);
+        return;
+      }
+      next({ message: 'Запрашиваемая карточка не найдена' });
+    })
     .catch(next);
 };
+
 // ---------------------------------------------------------------------------
 // создание жетона с зашифрованным _id пользователя на 7 дней
 function createToken(userData) {
@@ -52,7 +65,6 @@ const login = (req, res, next) => {
             return;
           }
           next('Неправильные почта или пароль');
-          // Promise.reject(new Error('Неправильные почта или пароль'));
         })
         .catch(next);
     })

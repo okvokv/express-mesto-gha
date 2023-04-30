@@ -29,7 +29,7 @@ const deleteCard = (req, res, next) => {
           .catch(next);
         return;
       }
-      res.status(404).send({ message: 'Запрашиваемая карточка не найдена' });
+      next({ message: 'Запрашиваемая карточка не найдена' });
     })
     .catch(next);
 };
