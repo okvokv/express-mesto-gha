@@ -17,7 +17,7 @@ const getUser = (req, res, next) => {
         res.send(userData);
         return;
       }
-      next({ message: 'Запрашиваемая карточка не найдена' });
+      next({ message: '404 Запрашиваемый пользователь не найден' });
     })
     .catch(next);
 };
@@ -29,13 +29,13 @@ const getCurrentUser = (req, res, next) => {
         res.send(userData);
         return;
       }
-      next({ message: 'Запрашиваемая карточка не найдена' });
+      next({ message: '404 Запрашиваемый пользователь не найден' });
     })
     .catch(next);
 };
 
 // ---------------------------------------------------------------------------
-// создание жетона с зашифрованным _id пользователя на 7 дней
+// функция создания жетона с зашифрованным _id пользователя на 7 дней
 function createToken(userData) {
   return jwt.sign(
     { _id: userData._id },

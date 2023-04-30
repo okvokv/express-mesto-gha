@@ -8,7 +8,11 @@ const {
 usersRouter.get('', getUsers);
 
 // обработка запроса получения данных пользователя по id
-usersRouter.get('/:userId', getUser);
+usersRouter.get('/:userId', celebrate({
+  params: Joi.object().keys({
+    userId: Joi.string().hex().length(24),
+  }),
+}), getUser);
 
 // обработка запроса получения данных текущего пользователя
 usersRouter.get('/me', getCurrentUser);

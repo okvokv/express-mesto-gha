@@ -21,6 +21,7 @@ const deleteCard = (req, res, next) => {
   // проверка наличия карточки
   card.findById(req.params.cardId)
     .then((cardData) => {
+      // проверка существования карточки  с данным _id бд
       if (cardData) {
         // карточку может удалить только владелец
         card.findByIdAndRemove(req.params.cardId, { ownerId: req.user_id })
@@ -42,7 +43,14 @@ const putLike = (req, res, next) => {
     // если в массиве его нет
     { new: true },
   )
-    .then((cardData) => res.send(cardData))
+    .then((cardData) => {
+      // проверка существования карточки с данным _id в бд
+      if (cardData) {
+        res.send(cardData);
+        return;
+      }
+      next({ message: 'Запрашиваемая карточка не найдена' });
+    })
     .catch(next);
 };
 
@@ -54,7 +62,14 @@ const deleteLike = (req, res, next) => {
     // если в массиве он уже есть
     { new: true },
   )
-    .then((cardData) => res.send(cardData))
+    .then((cardData) => {
+      // проверка существования карточки с данным _id в бд
+      if (cardData) {
+        res.send(cardData);
+        return;
+      }
+      next({ message: 'Запрашиваемая карточка не найдена' });
+    })
     .catch(next);
 };
 
