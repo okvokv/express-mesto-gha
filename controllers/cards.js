@@ -38,7 +38,7 @@ const deleteCard = (req, res, next) => {
         next(new ForbiddenError());
         return;
       }
-      next(new NotFoundError());
+      next(new NotFoundError('card'));
     })
     .catch((err) => determineError(err, next));
 };
@@ -57,7 +57,7 @@ const putLike = (req, res, next) => {
         res.send(cardData);
         return;
       }
-      next(new NotFoundError());
+      next(new NotFoundError('card'));
     })
     .catch((err) => determineError(err, next));
 };

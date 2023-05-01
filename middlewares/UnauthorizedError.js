@@ -8,10 +8,12 @@ class UnauthorizedError extends Error {
       return;
     }
     if (message.includes('header')) {
-      this.message = 'Некорректный заголовок';
+      this.message = 'Некорректный заголовок запроса';
       return;
     }
-    this.message = 'Неправильные почта или пароль';
+    if (message.includes()) {
+      this.message = 'Неправильные почта или пароль';
+    }
   }
 }
 
