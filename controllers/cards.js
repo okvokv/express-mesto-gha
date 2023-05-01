@@ -35,10 +35,10 @@ const deleteCard = (req, res, next) => {
             .catch((err) => determineError(err, next));
           return;
         }
-        next(new ForbiddenError('Нет прав на удаление'));
+        next(new ForbiddenError());
         return;
       }
-      next(new NotFoundError('Запрашиваемая карточка не найдена'));
+      next(new NotFoundError());
     })
     .catch((err) => determineError(err, next));
 };
@@ -57,7 +57,7 @@ const putLike = (req, res, next) => {
         res.send(cardData);
         return;
       }
-      next(new NotFoundError('Запрашиваемая карточка не найдена'));
+      next(new NotFoundError());
     })
     .catch((err) => determineError(err, next));
 };
@@ -76,7 +76,7 @@ const deleteLike = (req, res, next) => {
         res.send(cardData);
         return;
       }
-      next(new NotFoundError('Запрашиваемая карточка не найдена'));
+      next(new NotFoundError('card'));
     })
     .catch((err) => determineError(err, next));
 };

@@ -20,7 +20,7 @@ const getCurrentUser = (req, res, next) => {
         res.send(userData);
         return;
       }
-      next(new NotFoundError('Запрашиваемый пользователь не найден'));
+      next(new NotFoundError('user'));
     })
     .catch((err) => determineError(err, next));
 };
@@ -33,7 +33,7 @@ const getUser = (req, res, next) => {
         res.send(userData);
         return;
       }
-      next(new NotFoundError('Запрашиваемый пользователь не найден'));
+      next(new NotFoundError('user'));
     })
     .catch((err) => determineError(err, next));
 };
@@ -68,12 +68,12 @@ const login = (req, res, next) => {
               res.send({ token, message: 'Авторизация успешна.' });
               return;
             }
-            next(new UnauthorizedError('Неправильные почта или пароль'));
+            next(new UnauthorizedError());
           })
           .catch((err) => determineError(err, next));
         return;
       }
-      next(new UnauthorizedError('Неправильная почта или пароль'));
+      next(new UnauthorizedError());
     })
     .catch((err) => determineError(err, next));
 };

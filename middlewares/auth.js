@@ -11,10 +11,10 @@ function auth(req, res, next) {
       const payload = jwt.verify(token, 'super-strong-secret');
       req.user = payload;
       next();
-    } catch (err) { next(new UnauthorizedError('Некорректный жетон. Необходима авторизация')); }
+    } catch (err) { next(new UnauthorizedError('token')); }
     return;
   }
-  next(new UnauthorizedError('Некорректный заголовок'));
+  next(new UnauthorizedError('header'));
 }
 
 module.exports = auth;
