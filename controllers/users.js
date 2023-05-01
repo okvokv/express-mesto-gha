@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const user = require('../models/users');
 const determineError = require('../middlewares/errors');
+const UnauthorizedError = require('../middlewares/UnauthorizedError');
 const NotFoundError = require('../middlewares/NotFoundError');
 const WrongEmailError = require('../middlewares/WrongEmailError');
 
@@ -73,7 +74,7 @@ const login = (req, res, next) => {
           .catch((err) => determineError(err, next));
         return;
       }
-      next(new NotFoundError('Запрашиваемый пользователь не найден'));
+      next(new UnauthorizedError('Запрашиваемый пользователь не зарегистрирован'));
     })
     .catch((err) => determineError(err, next));
 };
