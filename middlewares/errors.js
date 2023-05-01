@@ -1,15 +1,18 @@
-// обработка ошибок
-// class ServerError extends Error {
-// constructor(err, message) {
-// super(message);
-// this.err = err;
-// }
-// }
+const ValidationError = require('./ValidationError');
+// const UnauthorizedError = require('./UnauthorizedError');
+// const ForbiddenError = require('./ForbiddenError');
+// const NotFoundError = require('./NotFoundError');
+// const WrongEmailError = require('./WrongEmailError');
 
 function determineError(err) {
-  if (err.name === 'ValidationError') {
+  if (err instanceof ValidationError) {
     const statusCode = 400;
     const errMessage = 'Ошибка валидации. Переданы некорректные данные';
+    return { statusCode, errMessage };
+  }
+  if (err.isJoi) {
+    const statusCode = 400;
+    const errMessage = err.details[0].message;
     return { statusCode, errMessage };
   }
   if (err.name === 'MongooseError' && err.message.includes('timed out')) {
@@ -64,6 +67,3 @@ module.exports = determineError;
 
 // Для ошибок созданы классы конструкторы ошибок, наследуемые от Error,
 // классы конструкторы ошибок с одинаковым статус-кодом не дублируются
-
-// Все ошибки должны проходить через централизованный обработчик c помощью next,
-// отправка ошибок напрямую в контроллере запрещена.

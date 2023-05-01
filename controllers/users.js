@@ -95,7 +95,7 @@ const createUser = (req, res, next) => {
 const updateCurrentUser = (req, res, next) => {
   const { name, about } = req.body;
   user.findOneAndUpdate(
-    { _id: req.user._id }, // изменить данные может только владелец
+    { _id: req.user._id }, // изменить профиль может только владелец
     { name, about },
     { new: true },
   )

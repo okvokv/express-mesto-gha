@@ -53,7 +53,7 @@ app.use(errors());
 
 // обработчик остальных ошибок
 app.use((err, req, res, next) => {
-  console.log('app', err.name, err.message); // ----------------------------//
+  console.log('app', err.name, err.message);
   const { statusCode, errMessage } = determineError(err);
   console.log('app', statusCode, errMessage);
   res.status(statusCode).send({ message: errMessage });

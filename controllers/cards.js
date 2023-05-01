@@ -23,7 +23,7 @@ const deleteCard = (req, res, next) => {
       // проверка существования карточки  с данным _id в бд
       if (cardData) {
         // карточку может удалить только владелец
-        const ownerId = cardData.ownerId.toString().match(/[\d\w]{24}/)[0];
+        const ownerId = cardData.ownerId.toString();
         if (ownerId === req.user._id) {
           res.send({ message: 'Пост удален' });
           return;
