@@ -4,7 +4,6 @@ const user = require('../models/users');
 const determineError = require('../middlewares/errors');
 const UnauthorizedError = require('../middlewares/UnauthorizedError');
 const NotFoundError = require('../middlewares/NotFoundError');
-const WrongEmailError = require('../middlewares/WrongEmailError');
 
 // получить всех пользователей
 const getUsers = (req, res, next) => {
