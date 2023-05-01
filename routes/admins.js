@@ -3,14 +3,14 @@ const adminsRouter = require('express').Router();
 const { regexforlink, regexforpassword } = require('../utils/regex');
 const { login, createUser } = require('../controllers/users');
 
-adminsRouter.post('/signin', celebrate({
+adminsRouter.post('signin', celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
     password: Joi.string().required().min(8).max(30),
   }),
 }), login);
 
-adminsRouter.post('/signup', celebrate({
+adminsRouter.post('signup', celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
     password: Joi.string().required().regex(regexforpassword),
