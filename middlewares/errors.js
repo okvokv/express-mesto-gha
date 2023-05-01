@@ -1,3 +1,4 @@
+// const { Joi } = require('celebrate');
 const ValidationError = require('./ValidationError');
 // const UnauthorizedError = require('./UnauthorizedError');
 // const ForbiddenError = require('./ForbiddenError');
@@ -10,11 +11,12 @@ function determineError(err) {
     const errMessage = 'Ошибка валидации. Переданы некорректные данные';
     return { statusCode, errMessage };
   }
-  if (err.isJoi) {
-    const statusCode = 400;
-    const errMessage = err.details[0].message;
-    return { statusCode, errMessage };
-  }
+  // if (err.message.includes('Validation failed')) {
+  //  console.log(err);
+  // const statusCode = 400;
+  // const errMessage = err.details[0].message;
+  //  return { statusCode, errMessage };
+  // }
   if (err.name === 'MongooseError' && err.message.includes('timed out')) {
     const statusCode = 400;
     const errMessage = 'Ошибка базы данных.';
@@ -64,6 +66,3 @@ function determineError(err) {
 
 // const serverError = new ServerError().determineError();
 module.exports = determineError;
-
-// Для ошибок созданы классы конструкторы ошибок, наследуемые от Error,
-// классы конструкторы ошибок с одинаковым статус-кодом не дублируются
