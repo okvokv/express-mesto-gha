@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const user = require('../models/users');
+const determineError = require('../middlewares/errors');
 const NotFoundError = require('../middlewares/NotFoundError');
 const WrongEmailError = require('../middlewares/WrongEmailError');
 
@@ -8,7 +9,7 @@ const WrongEmailError = require('../middlewares/WrongEmailError');
 const getUsers = (req, res, next) => {
   user.find()
     .then((users) => res.send(users))
-    .catch(next);
+    .catch((err) => determineError(err, next));
 };
 
 // получить данные текущего пользователя
@@ -21,7 +22,7 @@ const getCurrentUser = (req, res, next) => {
       }
       next(new NotFoundError('Запрашиваемый пользователь не найден'));
     })
-    .catch(next);
+    .catch((err) => determineError(err, next));
 };
 
 // получить данные любого пользователя по id
@@ -34,7 +35,7 @@ const getUser = (req, res, next) => {
       }
       next(new NotFoundError('Запрашиваемый пользователь не найден'));
     })
-    .catch(next);
+    .catch((err) => determineError(err, next));
 };
 
 // ---------------------------------------------------------------------------
@@ -68,9 +69,9 @@ const login = (req, res, next) => {
           }
           next(new WrongEmailError('Неправильные почта или пароль'));
         })
-        .catch(next);
+        .catch((err) => determineError(err, next));
     })
-    .catch(next);
+    .catch((err) => determineError(err, next));
 };
 
 // создать пользователя
@@ -90,7 +91,7 @@ const createUser = (req, res, next) => {
       _id: userData._id,
       email: userData.email,
     }))
-    .catch(next);
+    .catch((err) => determineError(err, next));
 };
 //------------------------------------------------------------------------------
 // изменить данные текущего пользователя
@@ -102,7 +103,7 @@ const updateCurrentUser = (req, res, next) => {
     { new: true, runValidators: true },
   )
     .then((userData) => res.send(userData))
-    .catch(next);
+    .catch((err) => determineError(err, next));
 };
 
 // изменить аватар текущего пользователя
@@ -113,7 +114,7 @@ const updateAvatar = (req, res, next) => {
     { new: true, runValidators: true },
   )
     .then((userData) => res.send(userData))
-    .catch(next);
+    .catch((err) => determineError(err, next));
 };
 // --------------------------------------------------------------------------
 module.exports = {
