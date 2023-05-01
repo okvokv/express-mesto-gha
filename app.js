@@ -1,12 +1,10 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
-const { errors, celebrate, Joi } = require('celebrate');
 const NotFoundError = require('./middlewares/NotFoundError');
-const { regexforlink, regexforpassword } = require('./utils/regex');
 const config = require('./config');
-const { login, createUser } = require('./controllers/users');
 const auth = require('./middlewares/auth');
+const adminsRouter = require('./routes/admins');
 const usersRouter = require('./routes/users');
 const cardsRouter = require('./routes/cards');
 
@@ -27,30 +25,11 @@ app.use(cookieParser());
 app.use(express.json());
 
 // подключение роутеров
-app.post('/signin', celebrate({
-  body: Joi.object().keys({
-    email: Joi.string().required().email(),
-    password: Joi.string().required().min(8).max(30),
-  }),
-}), login);
-
-app.post('/signup', celebrate({
-  body: Joi.object().keys({
-    email: Joi.string().required().email(),
-    password: Joi.string().required().regex(regexforpassword),
-    name: Joi.string().min(2).max(30),
-    about: Joi.string().min(2).max(30),
-    avatar: Joi.string().regex(regexforlink),
-  }),
-}), createUser);
-
+app.use('/', adminsRouter);
 app.use('/users', auth, usersRouter);
 app.use('/cards', auth, cardsRouter);
 
 app.use('*', auth, ((req, res, next) => next(new NotFoundError('Ошибка маршрутизации'))));
-
-// обработчик ошибок celebrate
-app.use(errors());
 
 // обработчик остальных ошибок
 app.use((err, req, res, next) => {
