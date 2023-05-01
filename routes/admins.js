@@ -1,4 +1,4 @@
-const { errors, celebrate, Joi } = require('celebrate');
+const { celebrate, Joi } = require('celebrate');
 const adminsRouter = require('express').Router();
 const { regexforlink, regexforpassword } = require('../utils/regex');
 const { login, createUser } = require('../controllers/users');
@@ -19,8 +19,5 @@ adminsRouter.post('/signup', celebrate({
     avatar: Joi.string().regex(regexforlink),
   }),
 }), createUser);
-
-// обработчик ошибок celebrate
-adminsRouter.use(errors());
 
 module.exports = adminsRouter;

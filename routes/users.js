@@ -1,4 +1,4 @@
-const { errors, celebrate, Joi } = require('celebrate');
+const { celebrate, Joi } = require('celebrate');
 const usersRouter = require('express').Router();
 const { regexforlink } = require('../utils/regex');
 const {
@@ -32,8 +32,5 @@ usersRouter.patch('/me/avatar', celebrate({
     avatar: Joi.string().required().regex(regexforlink),
   }),
 }), updateAvatar);
-
-// обработчик ошибок celebrate
-usersRouter.use(errors());
 
 module.exports = usersRouter;

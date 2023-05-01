@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
+const { errors } = require('celebrate');
 const NotFoundError = require('./middlewares/NotFoundError');
 const config = require('./config');
 const auth = require('./middlewares/auth');
@@ -31,11 +32,14 @@ app.use('/cards', auth, cardsRouter);
 
 app.use('*', auth, ((req, res, next) => next(new NotFoundError('Ошибка маршрутизации'))));
 
+// обработчик ошибок celebrate
+app.use(errors());
+
 // обработчик остальных ошибок
 app.use((err, req, res, next) => {
-  const { statusCode, message } = err;
+  const { statusCode = 500, message } = err;
   console.log('app:', statusCode, message);
-  res.status(statusCode).send({ message });
+  res.status(statusCode).send({ message: statusCode === 500 ? 'На сервере произошла ошибка' : message });
   next();
 });
 

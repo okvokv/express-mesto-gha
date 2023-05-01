@@ -53,23 +53,27 @@ const login = (req, res, next) => {
   const { email, password } = req.body;
   user.findOne({ email }).select('+password')
     .then((userData) => {
-      bcrypt.compare(password, userData.password)
-        .then((matched) => {
-          if (matched) {
-            const token = createToken(userData);
-            // выдача жетона пользователю в coookies
-            // res.cookie('jwt', token, {
-            // maxAge: 3600000 * 24 * 7, // 7 дней
-            // httpOnly: true,
-            // sameSite: true,
-            // });
-            // если у ответа нет тела, можно использовать метод .end();
-            res.send({ token, message: 'Авторизация успешна.' });
-            return;
-          }
-          next(new WrongEmailError('Неправильные почта или пароль'));
-        })
-        .catch((err) => determineError(err, next));
+      if (userData) {
+        bcrypt.compare(password, userData.password)
+          .then((matched) => {
+            if (matched) {
+              const token = createToken(userData);
+              // выдача жетона пользователю в coookies
+              // res.cookie('jwt', token, {
+              // maxAge: 3600000 * 24 * 7, // 7 дней
+              // httpOnly: true,
+              // sameSite: true,
+              // });
+              // если у ответа нет тела, можно использовать метод .end();
+              res.send({ token, message: 'Авторизация успешна.' });
+              return;
+            }
+            next(new WrongEmailError('Неправильные почта или пароль'));
+          })
+          .catch((err) => determineError(err, next));
+        return;
+      }
+      next(new NotFoundError('Запрашиваемый пользователь не найден'));
     })
     .catch((err) => determineError(err, next));
 };

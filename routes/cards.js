@@ -1,4 +1,4 @@
-const { errors, celebrate, Joi } = require('celebrate');
+const { celebrate, Joi } = require('celebrate');
 const cardsRouter = require('express').Router();
 const { regexforlink } = require('../utils/regex');
 const {
@@ -36,8 +36,5 @@ cardsRouter.delete('/:cardId/likes', celebrate({
     cardId: Joi.string().hex().length(24),
   }),
 }), deleteLike);
-
-// обработчик ошибок celebrate
-cardsRouter.use(errors());
 
 module.exports = cardsRouter;
