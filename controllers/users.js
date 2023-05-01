@@ -74,7 +74,7 @@ const login = (req, res, next) => {
           .catch((err) => determineError(err, next));
         return;
       }
-      next(new UnauthorizedError('Запрашиваемый пользователь не зарегистрирован'));
+      next(new UnauthorizedError('Пользователь с таким email не зарегистрирован'));
     })
     .catch((err) => determineError(err, next));
 };
