@@ -6,6 +6,7 @@ const WrongEmailError = require('./WrongEmailError');
 const InternalServerError = require('./InternalServerError');
 
 function determineError(err, next) {
+  console.log(err);
   if (err instanceof ValidationError) {
     return next(new ValidationError('Ошибка валидации. Переданы некорректные данные'));
   }
@@ -18,10 +19,10 @@ function determineError(err, next) {
   if (err.name === 'CastError') {
     return next(new ValidationError('Передан некорректный id'));
   }
-  if (err.message.includes('invalid token')) {
-    // ошибка аутентификации
-    return next(new UnauthorizedError('Передан некорректно жетон / Необходима авторизация'));
-  }
+  // if (err.message.includes('invalid token')) {
+  // ошибка аутентификации
+  // return next(new UnauthorizedError('Передан некорректно жетон / Необходима авторизация'));
+  // }
   if (err.message.includes('password')) {
     // ошибка авторизации
     return next(new UnauthorizedError('Неправильные почта или пароль'));
