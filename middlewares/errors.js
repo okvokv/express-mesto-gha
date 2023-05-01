@@ -10,11 +10,11 @@ function determineError(err) {
     const errMessage = 'Ошибка валидации. Переданы некорректные данные';
     return { statusCode, errMessage };
   }
-  if (err.isJoi) {
-    const statusCode = 400;
-    const errMessage = err.details[0].message;
-    return { statusCode, errMessage };
-  }
+  // if (err.isJoi) {
+  // const statusCode = 400;
+  // const errMessage = err.details[0].message;
+  // return { statusCode, errMessage };
+  // }
   if (err.name === 'MongooseError' && err.message.includes('timed out')) {
     const statusCode = 400;
     const errMessage = 'Ошибка базы данных.';
