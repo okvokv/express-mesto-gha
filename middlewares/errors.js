@@ -1,6 +1,7 @@
 const ValidationError = require('./ValidationError');
 const WrongEmailError = require('./WrongEmailError');
 
+// определение типа ошибки
 function determineError(err, next) {
   console.log(err);
   if (err instanceof ValidationError) {

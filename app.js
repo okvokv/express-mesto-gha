@@ -3,7 +3,6 @@ const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const { errors } = require('celebrate');
 const NotFoundError = require('./middlewares/NotFoundError');
-const InternalServerError = require('./middlewares/InternalServerError');
 const config = require('./config');
 const auth = require('./middlewares/auth');
 const adminsRouter = require('./routes/admins');
@@ -40,10 +39,7 @@ app.use(errors());
 app.use((err, req, res, next) => {
   const { statusCode = 500, message } = err;
   console.log('app:', statusCode, message);
-  res.status(statusCode).send({
-    message: statusCode === 500
-      ? new InternalServerError() : message,
-  });
+  res.status(statusCode).send({ message: statusCode === 500 ? 'На сервере произошла ошибка' : message });
   next();
 });
 

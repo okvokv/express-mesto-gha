@@ -3,6 +3,7 @@ class NotFoundError extends Error {
     super(message);
     this.statusCode = 404;
     this.name = 'NotFoundError';
+    // ветвление в пределах ошибки одного типа
     if (message.includes('user')) {
       this.message = 'Запрашиваемый пользователь не найден';
       return;

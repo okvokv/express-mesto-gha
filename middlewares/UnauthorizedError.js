@@ -3,6 +3,7 @@ class UnauthorizedError extends Error {
     super(message);
     this.statusCode = 401;
     this.name = 'UnauthorizedError';
+    // ветвление в пределах ошибки одного типа
     if (message.includes('token')) {
       this.message = 'Некорректный жетон. Необходима авторизация';
       return;
@@ -11,9 +12,7 @@ class UnauthorizedError extends Error {
       this.message = 'Некорректный заголовок запроса';
       return;
     }
-    if (message.includes()) {
-      this.message = 'Неправильные почта или пароль';
-    }
+    this.message = 'Неправильные почта или пароль';
   }
 }
 
