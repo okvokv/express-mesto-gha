@@ -69,12 +69,12 @@ const login = (req, res, next) => {
               res.send({ token, message: 'Авторизация успешна.' });
               return;
             }
-            next(new WrongEmailError('Неправильные почта или пароль'));
+            next(new UnauthorizedError('Неправильные почта или пароль'));
           })
           .catch((err) => determineError(err, next));
         return;
       }
-      next(new UnauthorizedError('Пользователь с таким email не зарегистрирован'));
+      next(new UnauthorizedError('Пользователь с таким email не зарегистрирован или 404 Неправильная почта или пароль'));
     })
     .catch((err) => determineError(err, next));
 };
