@@ -58,6 +58,11 @@ function determineError(err) {
     const errMessage = 'Пользователь с таким email уже существует';
     return { statusCode, errMessage };
   }
+  if (err.message.includes('Ошибка маршрутизации')) {
+    const statusCode = 404;
+    const errMessage = 'Запрошен несуществующий маршрут';
+    return { statusCode, errMessage };
+  }
   const statusCode = 500;
   const errMessage = 'На сервере произошла ошибка';
   return { statusCode, errMessage };

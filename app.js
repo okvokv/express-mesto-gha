@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const { errors, celebrate, Joi } = require('celebrate');
+const { regexforlink, regexforpassword } = require('./utils/regex');
 const config = require('./config');
 const { login, createUser } = require('./controllers/users');
 const auth = require('./middlewares/auth');
@@ -36,17 +37,17 @@ app.post('/signin', celebrate({
 app.post('/signup', celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
-    password: Joi.string().required().regex(/^[^а-яА-Я\s]{8,30}\s*$/),
+    password: Joi.string().required().regex(regexforpassword),
     name: Joi.string().min(2).max(30),
     about: Joi.string().min(2).max(30),
-    avatar: Joi.string().regex(/^https?:\/\/\S+\s*$/),
+    avatar: Joi.string().regex(regexforlink),
   }),
 }), createUser);
 
 app.use('/users', auth, usersRouter);
 app.use('/cards', auth, cardsRouter);
 
-app.use('*', ((req, res) => res.status(404).send({ message: 'Запрошен несуществующий маршрут' })));
+app.use('*', auth, ((req, res, next) => next('Ошибка маршрутизации')));
 
 // обработчик ошибок celebrate
 app.use(errors());

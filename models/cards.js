@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { regexforlink } = require('../utils/regex');
 
 const cardSchema = new mongoose.Schema(
   {
@@ -18,7 +19,7 @@ const cardSchema = new mongoose.Schema(
       required: true,
       validate: {
         validator(link) {
-          return /^\s*https?:\/\/\S+\s*$/.test(link);
+          return regexforlink.test(link);
         },
         message: 'Ошибка валидации ссылки',
       },

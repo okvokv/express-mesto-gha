@@ -18,14 +18,18 @@ const createCard = (req, res, next) => {
 // ----------------------------------------------------------------------------------
 // удалить карточку
 const deleteCard = (req, res, next) => {
-  card.findByIdAndRemove(req.params.cardId, { ownerId: req.user._id })
+  // проверка существования карточки  с данным _id в бд
+  card.findById(req.params.cardId)
     .then((cardData) => {
-      // проверка существования карточки  с данным _id в бд
       if (cardData) {
         // карточку может удалить только владелец
         const ownerId = cardData.ownerId.toString();
         if (ownerId === req.user._id) {
-          res.send({ message: 'Пост удален' });
+          card.findByIdAndRemove(req.params.cardId, { ownerId: req.user._id })
+            .then(() => {
+              res.send({ message: 'Пост удален' });
+            })
+            .catch(next);
           return;
         }
         next({ message: 'Нет прав на удаление' });

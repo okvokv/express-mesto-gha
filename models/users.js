@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
+const { regexforlink } = require('../utils/regex');
 
 const userSchema = new mongoose.Schema(
   {
@@ -43,7 +44,7 @@ const userSchema = new mongoose.Schema(
       default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
       validate: {
         validator(avatar) {
-          return /^\s*https?:\/\/\S+\s*$/.test(avatar);
+          return regexforlink.test(avatar);
         },
         message: 'Ошибка валидации ссылки',
       },

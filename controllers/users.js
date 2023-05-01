@@ -97,7 +97,7 @@ const updateCurrentUser = (req, res, next) => {
   user.findOneAndUpdate(
     { _id: req.user._id }, // изменить профиль может только владелец
     { name, about },
-    { new: true },
+    { new: true, runValidators: true },
   )
     .then((userData) => res.send(userData))
     .catch(next);
@@ -108,7 +108,7 @@ const updateAvatar = (req, res, next) => {
   user.findOneAndUpdate(
     { _id: req.user._id }, // изменить аватар может только владелец
     { avatar: req.body.avatar },
-    { new: true },
+    { new: true, runValidators: true },
   )
     .then((userData) => res.send(userData))
     .catch(next);
