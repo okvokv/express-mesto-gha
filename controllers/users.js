@@ -74,7 +74,7 @@ const login = (req, res, next) => {
           .catch((err) => determineError(err, next));
         return;
       }
-      next(new UnauthorizedError('Пользователь с таким email не зарегистрирован или 404 Неправильная почта или пароль'));
+      next(new UnauthorizedError('Неправильная почта или пароль'));
     })
     .catch((err) => determineError(err, next));
 };
