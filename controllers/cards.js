@@ -1,4 +1,6 @@
 const card = require('../models/cards');
+const ForbiddenError = require('../middlewares/ForbiddenError');
+const NotFoundError = require('../middlewares/NotFoundError');
 
 // получить все карточки
 const getCards = (req, res, next) => {
@@ -32,10 +34,10 @@ const deleteCard = (req, res, next) => {
             .catch(next);
           return;
         }
-        next({ message: 'Нет прав на удаление' });
+        next(new ForbiddenError('Нет прав на удаление'));
         return;
       }
-      next({ message: 'Запрашиваемая карточка не найдена' });
+      next(NotFoundError('Запрашиваемая карточка не найдена'));
     })
     .catch(next);
 };
@@ -54,7 +56,7 @@ const putLike = (req, res, next) => {
         res.send(cardData);
         return;
       }
-      next({ message: 'Запрашиваемая карточка не найдена' });
+      next(NotFoundError('Запрашиваемая карточка не найдена'));
     })
     .catch(next);
 };
@@ -73,7 +75,7 @@ const deleteLike = (req, res, next) => {
         res.send(cardData);
         return;
       }
-      next({ message: 'Запрашиваемая карточка не найдена' });
+      next(NotFoundError('Запрашиваемая карточка не найдена'));
     })
     .catch(next);
 };

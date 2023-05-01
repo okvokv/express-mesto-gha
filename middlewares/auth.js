@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const UnauthorizedError = require('./UnauthorizedError');
 
 // проверка жетона при аутентификации пользователя
 function auth(req, res, next) {
@@ -10,10 +11,10 @@ function auth(req, res, next) {
       const payload = jwt.verify(token, 'super-strong-secret');
       req.user = payload;
       next();
-    } catch (err) { next(err); }
+    } catch (err) { next(new UnauthorizedError('Некорректный жетон. Необходима авторизация')); }
     return;
   }
-  next({ message: 'Некорректный заголовок' });
+  next(new UnauthorizedError('Некорректный заголовок'));
 }
 
 module.exports = auth;

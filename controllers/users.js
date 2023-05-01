@@ -1,6 +1,8 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const user = require('../models/users');
+const NotFoundError = require('../middlewares/NotFoundError');
+const WrongEmailError = require('../middlewares/WrongEmailError');
 
 // получить всех пользователей
 const getUsers = (req, res, next) => {
@@ -17,7 +19,7 @@ const getCurrentUser = (req, res, next) => {
         res.send(userData);
         return;
       }
-      next({ message: 'Запрашиваемый пользователь не найден' });
+      next(new NotFoundError('Запрашиваемый пользователь не найден'));
     })
     .catch(next);
 };
@@ -30,7 +32,7 @@ const getUser = (req, res, next) => {
         res.send(userData);
         return;
       }
-      next({ message: 'Запрашиваемый пользователь не найден' });
+      next(new NotFoundError('Запрашиваемый пользователь не найден'));
     })
     .catch(next);
 };
@@ -64,7 +66,7 @@ const login = (req, res, next) => {
             res.send({ token, message: 'Авторизация успешна.' });
             return;
           }
-          next({ message: 'Неправильные почта или пароль' });
+          next(new WrongEmailError('Неправильные почта или пароль'));
         })
         .catch(next);
     })

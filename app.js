@@ -2,13 +2,13 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const { errors, celebrate, Joi } = require('celebrate');
+const NotFoundError = require('./middlewares/NotFoundError');
 const { regexforlink, regexforpassword } = require('./utils/regex');
 const config = require('./config');
 const { login, createUser } = require('./controllers/users');
 const auth = require('./middlewares/auth');
 const usersRouter = require('./routes/users');
 const cardsRouter = require('./routes/cards');
-const determineError = require('./middlewares/errors');
 
 // назначение порта сервера
 const { PORT } = config;
@@ -47,17 +47,16 @@ app.post('/signup', celebrate({
 app.use('/users', auth, usersRouter);
 app.use('/cards', auth, cardsRouter);
 
-app.use('*', auth, ((req, res, next) => next('Ошибка маршрутизации')));
+app.use('*', auth, ((req, res, next) => next(new NotFoundError('Ошибка маршрутизации'))));
 
 // обработчик ошибок celebrate
 app.use(errors());
 
 // обработчик остальных ошибок
 app.use((err, req, res, next) => {
-  console.log('app', err.name, err.message);
-  const { statusCode, errMessage } = determineError(err);
-  console.log('app', statusCode, errMessage);
-  res.status(statusCode).send({ message: errMessage });
+  const { statusCode = 500, message } = err;
+  console.log('app', statusCode, message);
+  res.status(statusCode).send({ message: statusCode === 500 ? 'На сервере произошла ошибка' : message });
   next();
 });
 
