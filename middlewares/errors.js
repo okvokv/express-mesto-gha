@@ -11,11 +11,10 @@ function determineError(err) {
     const errMessage = 'Ошибка валидации. Переданы некорректные данные';
     return { statusCode, errMessage };
   }
-  // if (err.message.includes('Validation failed')) {
-  //  console.log(err);
+  // if (err.isJoi) {
   // const statusCode = 400;
   // const errMessage = err.details[0].message;
-  //  return { statusCode, errMessage };
+  // return { statusCode, errMessage };
   // }
   if (err.name === 'MongooseError' && err.message.includes('timed out')) {
     const statusCode = 400;
