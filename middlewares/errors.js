@@ -4,11 +4,11 @@ const WrongEmailError = require('./WrongEmailError');
 // определение типа ошибки
 function determineError(err, next) {
   console.log(err);
-  if (err instanceof ValidationError) {
-    return next(new ValidationError());
+  if (err.message.includes('Validation')) {
+    return next(new ValidationError(''));
   }
   if (err.name === 'CastError') {
-    return next(new ValidationError('Передан некорректный id'));
+    return next(new ValidationError('cast'));
   }
   if (err.message.includes('E11000')) {
     return next(new WrongEmailError());

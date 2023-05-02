@@ -1,8 +1,8 @@
 class UnauthorizedError extends Error {
   constructor(message) {
     super(message);
-    this.statusCode = 401;
     this.name = 'UnauthorizedError';
+    this.statusCode = 401;
     // ветвление в пределах ошибки одного типа
     if (message.includes('token')) {
       this.message = 'Некорректный жетон. Необходима авторизация';
