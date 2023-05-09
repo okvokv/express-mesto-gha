@@ -1,5 +1,6 @@
 const express = require('express');
 require('dotenv').config();
+const cors = require('cors');
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const { errors } = require('celebrate');
@@ -55,6 +56,18 @@ app.use((err, req, res, next) => {
   res.status(statusCode).send({ message: statusCode === 500 ? 'На сервере произошла ошибка' : message });
   next();
 });
+
+const allowedCors = [
+  'http://okvokv-front.students.nomoredomains.monster',
+  'https://okvokv-front.students.nomoredomains.monster',
+  'http://github.com/*',
+  'https://github.com/*',
+  'localhost:3000',
+  '0.0.0.0',
+];
+
+// обработчик CORS
+app.use(cors({ origin: allowedCors }));
 
 // включение прослушивания  порта
 app.listen(PORT, () => {
