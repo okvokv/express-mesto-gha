@@ -1,3 +1,4 @@
+const { NODE_ENV, JWT_SECRET } = process.env;
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const user = require('../models/users');
@@ -43,7 +44,8 @@ const getUser = (req, res, next) => {
 function createToken(userData) {
   return jwt.sign(
     { _id: userData._id },
-    'super-strong-secret',
+    // проверка на отсутствие режима разработки
+    NODE_ENV === 'production' ? JWT_SECRET : 'super-strong-secret',
     { expiresIn: '7d' },
   );
 }

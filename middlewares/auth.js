@@ -1,3 +1,4 @@
+const { NODE_ENV, JWT_SECRET } = process.env;
 const jwt = require('jsonwebtoken');
 const UnauthorizedError = require('./UnauthorizedError');
 
@@ -8,7 +9,7 @@ function auth(req, res, next) {
   if (authorization && authorization.startsWith('Bearer ')) {
     const token = authorization.replace('Bearer ', '');
     try {
-      const payload = jwt.verify(token, 'super-strong-secret');
+      const payload = jwt.verify(token, NODE_ENV === 'production' ? JWT_SECRET : 'super-strong-secret'); // проверка на отсутствие режима разработки
       req.user = payload;
       next();
     } catch (err) { next(new UnauthorizedError('token')); }

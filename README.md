@@ -1,6 +1,6 @@
 [![Tests](../../actions/workflows/tests-13-sprint.yml/badge.svg)](../../actions/workflows/tests-13-sprint.yml) [![Tests](../../actions/workflows/tests-14-sprint.yml/badge.svg)](../../actions/workflows/tests-14-sprint.yml)
 
-###                  Учебный проект Mesto фронтенд + бэкенд
+###                  Учебный проект Mesto бэкенд
         
       результат выполнения практической работы на Яндекс-Практикуме.
 

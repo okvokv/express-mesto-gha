@@ -1,13 +1,15 @@
 const express = require('express');
+require('dotenv').config();
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const { errors } = require('celebrate');
-const NotFoundError = require('./middlewares/NotFoundError');
 const config = require('./config');
+const NotFoundError = require('./middlewares/NotFoundError');
 const auth = require('./middlewares/auth');
 const adminsRouter = require('./routes/admins');
 const usersRouter = require('./routes/users');
 const cardsRouter = require('./routes/cards');
+const { requestsLogger, errorsLogger } = require('./middlewares/logger');
 
 // назначение порта сервера
 const { PORT } = config;
@@ -25,12 +27,23 @@ app.use(cookieParser());
 // сборка объекта из JSON-формата
 app.use(express.json());
 
+// реализация возможности краш-теста при запросе на роут, потом удалить
+app.get('/crash-test', () => {
+  setTimeout(() => { throw new Error('Сервер сейчас упадёт'); }, 0);
+});
+
+// подключение логгера запросов
+app.use(requestsLogger);
+
 // подключение роутеров
 app.use('/', adminsRouter);
 app.use('/users', auth, usersRouter);
 app.use('/cards', auth, cardsRouter);
 
 app.use('*', auth, ((req, res, next) => next(new NotFoundError('root'))));
+
+// подключение логгера ошибок (после обр. запросов, до обр. ошибок)
+app.use(errorsLogger);
 
 // обработчик ошибок celebrate
 app.use(errors());
