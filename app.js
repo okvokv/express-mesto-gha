@@ -36,6 +36,19 @@ app.get('/crash-test', () => {
 // подключение логгера запросов
 app.use(requestsLogger);
 
+// разрешённые адреса исходящих запросов
+const allowedCors = [
+  'http://okvokv-front.students.nomoredomains.monster',
+  'https://okvokv-front.students.nomoredomains.monster',
+  'http://github.com/*',
+  'https://github.com/*',
+  'localhost:3000/*',
+  '0.0.0.0/*',
+];
+
+// обработчик CORS
+app.use(cors({ origin: allowedCors }));
+
 // подключение роутеров
 app.use('/', adminsRouter);
 app.use('/users', auth, usersRouter);
@@ -56,18 +69,6 @@ app.use((err, req, res, next) => {
   res.status(statusCode).send({ message: statusCode === 500 ? 'На сервере произошла ошибка' : message });
   next();
 });
-
-const allowedCors = [
-  'http://okvokv-front.students.nomoredomains.monster',
-  'https://okvokv-front.students.nomoredomains.monster',
-  'http://github.com/*',
-  'https://github.com/*',
-  'localhost:3000',
-  '0.0.0.0',
-];
-
-// обработчик CORS
-app.use(cors({ origin: allowedCors }));
 
 // включение прослушивания  порта
 app.listen(PORT, () => {
