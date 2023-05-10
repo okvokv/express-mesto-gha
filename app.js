@@ -38,6 +38,8 @@ app.use(requestsLogger);
 
 // разрешённые адреса исходящих запросов
 const allowedCors = [
+  'http://okvokv-back.students.nomoredomains.monster',
+  'https://okvokv-back.students.nomoredomains.monster',
   'http://okvokv-front.students.nomoredomains.monster',
   'https://okvokv-front.students.nomoredomains.monster',
   'http://github.com/*',
